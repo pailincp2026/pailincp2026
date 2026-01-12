@@ -38,6 +38,13 @@
       align-items: center;
       padding: 0 20px;
       color: white;
+      justify-content: space-between; /* จัดโลโก้และข้อความให้ชิดซ้ายขวา */
+    }
+    
+    /* เพิ่ม style สำหรับโลโก้ */
+    .logo {
+        height: 60px; /* ปรับขนาดโลโก้ตามต้องการ */
+        margin-right: 15px;
     }
 
     .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
@@ -137,6 +144,8 @@
 
 <div class="calculator-card">
   <div class="hero">
+    <!-- เพิ่ม Image Tag สำหรับโลโก้ -->
+    <img src="https://your-logo-url.png" alt="Company Logo" class="logo">
     <div class="hero-text">
       <h2>Benefit Calculator</h2>
       <p>Operational Cost Estimation (2026)</p>
@@ -145,7 +154,6 @@
 
   <div class="content">
     <div class="input-group">
-      <!-- ส่วนเลือก Media -->
       <div class="full-width">
         <label>Media</label>
         <select id="type-select" onchange="applyPreset()">
@@ -153,18 +161,15 @@
           <option value="gas_pacpp">Gas / PACPP</option>
           <option value="condy">CONDY PACPP</option>
           <option value="remote">Gas Remote Platform</option>
-          <!-- เพิ่มตัวเลือกใหม่สำหรับ SKL-PALQ -->
           <option value="skl_palq">Routh SKL-PALQ</option>
         </select>
       </div>
 
-      <!-- ส่วนกรอก Hours (เปลี่ยน Label เป็น Hours/Distance ตาม preset) -->
       <div class="full-width">
         <label id="main-input-label">Hours</label>
         <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
       </div>
 
-      <!-- ส่วน Rate และ Price ที่ถูกล็อกค่าไว้ (Fixed & Readonly) -->
       <div class="field-row">
         <div>
           <label id="rate-label">Rate: mmscf/hrs</label>
@@ -177,7 +182,6 @@
       </div>
     </div>
 
-    <!-- ส่วนแสดงผล SAVE COST -->
     <div class="result-section">
       <div id="selected-label">Please select media type above</div>
       <div class="total-display" id="grand-total">$0.00</div>
@@ -192,13 +196,11 @@
 </div>
 
 <script>
-  // ค่าตายตัวที่ฟิกไว้ตามเงื่อนไข (Fixed Values)
   const presets = {
     gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, isRouth: false },
     condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   isRouth: false },
     remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, isRouth: false },
-    // เพิ่มค่า Preset สำหรับ Routh SKL-PALQ
-    skl_palq:  { label: "Routh SKL-PALQ", rate: 38, price: 0.621, isRouth: true } // Rate = Liters/Mile, Price = $/Liter
+    skl_palq:  { label: "Routh SKL-PALQ", rate: 38, price: 0.621, isRouth: true }
   };
 
   function applyPreset() {
@@ -207,36 +209,33 @@
     const mainInputLabel = document.getElementById('main-input-label');
     const rateLabel = document.getElementById('rate-label');
     const priceLabel = document.getElementById('price-label');
+    const badgeText = document.getElementById('badge-text');
 
     if (data) {
-      // อัปเดตค่าที่ฟิกไว้ลงในช่อง Read-only
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
       document.getElementById('selected-label').innerText = "Selected: " + data.label;
       
-      // ปรับเปลี่ยน Label ตามประเภทการคำนวณ
       if (data.isRouth) {
           mainInputLabel.innerText = "Distance (Mile)";
           rateLabel.innerText = "Liter/Mile";
           priceLabel.innerText = "$/Liter";
-          document.getElementById('badge-text').innerText = "ROUND-TRIP COST";
-
+          badgeText.innerText = "ROUND-TRIP COST";
       } else {
           mainInputLabel.innerText = "Hours";
           rateLabel.innerText = "Rate: mmscf/hrs";
           priceLabel.innerText = "$/mmscf";
-          document.getElementById('badge-text').innerText = "SAVE COST";
+          badgeText.innerText = "SAVE COST";
       }
 
     } else {
-      // กรณีไม่ได้เลือก ให้กลับเป็น 0 และค่าเริ่มต้น
       document.getElementById('val-r').value = 0;
       document.getElementById('val-p').value = 0;
       document.getElementById('selected-label').innerText = "Please select media type above";
       mainInputLabel.innerText = "Hours";
       rateLabel.innerText = "Rate: mmscf/hrs";
       priceLabel.innerText = "$/mmscf";
-      document.getElementById('badge-text').innerText = "SAVE COST";
+      badgeText.innerText = "SAVE COST";
     }
     calculate(); 
   }
@@ -250,16 +249,12 @@
     
     let total = 0;
     
-    // ตรวจสอบประเภทการคำนวณ
     if (selectedType && presets[selectedType].isRouth) {
-        // สูตรคำนวณแบบ Routh (Round-Trip): Distance * Liter/Mile * $/Liter * 2
         total = h * r * p * 2; 
     } else {
-        // สูตรคำนวณแบบเดิม (Save Cost): Hours * Rate * Price
         total = h * r * p;
     }
     
-    // แสดงผลลัพธ์ในรูปแบบสกุลเงิน $0.00
     document.getElementById('grand-total').innerText = 
       '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
