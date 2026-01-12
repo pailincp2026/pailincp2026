@@ -1,114 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Benefit Calculator 2026</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benefit Calculator 2026</title>
 
-  <style>
-    :root {
-      --primary-blue: #003c78;
-      --accent-gold: #ffb81c;
-      --success-green: #28a745;
-      --bg-gray: #f0f2f5;
-    }
-
-    body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-gray);
-      display: flex;
-      justify-content: center;
-      padding: 10px;
-      margin: 0;
-    }
-
-    .calculator-card {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .hero {
-      height: 100px;
-      background: var(--primary-blue) linear-gradient(135deg, #003c78 0%, #0056b3 100%);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      color: white;
-      justify-content: space-between;
-    }
-
-    .logo { height: 60px; margin-right: 15px; }
-
-    .hero-text h2 { margin: 0; font-size: 1.4rem; }
-    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
-
-    .lang-btn {
-      background: #fff;
-      color: #003c78;
-      border: none;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .content { padding: 20px; }
-
-    label {
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: var(--primary-blue);
-      margin-bottom: 5px;
-      text-transform: uppercase;
-    }
-
-    select, input {
-      width: 100%;
-      padding: 12px;
-      border: 1.5px solid #dde;
-      border-radius: 10px;
-      font-size: 1rem;
-    }
-
-    input[readonly] {
-      background-color: #f1f3f5;
-      font-weight: bold;
-    }
-
-    .result-section {
-      background: #f8f9fa;
-      padding: 25px;
-      border-radius: 15px;
-      text-align: center;
-    }
-
-    .total-display {
-      color: var(--success-green);
-      font-weight: 800;
-      font-size: 2.5rem;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.7rem;
-      color: #aaa;
-    }
-  </style>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background:#f0f2f5;
+    display:flex;
+    justify-content:center;
+    padding:10px;
+  }
+  .calculator-card {
+    width:100%;
+    max-width:500px;
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  }
+  .hero {
+    background:#003c78;
+    color:#fff;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .lang-btn {
+    background:#fff;
+    color:#003c78;
+    border:none;
+    border-radius:20px;
+    padding:6px 12px;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .content { padding:20px; }
+  label { font-size:0.8rem; font-weight:bold; }
+  select,input {
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+  }
+  input[readonly] { background:#eee; }
+  .result-section {
+    background:#f8f9fa;
+    padding:20px;
+    text-align:center;
+    border-radius:12px;
+  }
+  .total-display {
+    font-size:2rem;
+    font-weight:bold;
+    color:#28a745;
+  }
+  .footer {
+    text-align:center;
+    font-size:0.7rem;
+    padding:15px;
+    color:#999;
+  }
+</style>
 </head>
 
 <body>
 
 <div class="calculator-card">
+
   <div class="hero">
-    <img src="logo.png" class="logo">
-    <div class="hero-text">
+    <div>
       <h2 id="title">Benefit Calculator</h2>
       <p id="subtitle">Operational Cost Estimation (2026)</p>
     </div>
@@ -140,86 +105,88 @@
       <div class="total-display" id="grand-total">$0.00</div>
       <div id="badge-text">SAVE COST</div>
     </div>
+
   </div>
 
   <div class="footer" id="footer-text">
-    © CHEVRON — INTERNAL USE ONLY<br>Optimized for Mobile Devices
+    © CHEVRON — INTERNAL USE ONLY
   </div>
+
 </div>
 
 <script>
-  let lang = "en";
+let lang = "en";
 
-  const text = {
-    en: {
-      title: "Benefit Calculator",
-      subtitle: "Operational Cost Estimation (2026)",
-      media: "Media",
-      hours: "Hours",
-      placeholder: "Enter hours...",
-      rate: "Rate",
-      price: "Price",
-      select: "Please select media type",
-      save: "SAVE COST",
-      footer: "© CHEVRON — INTERNAL USE ONLY"
-    },
-    th: {
-      title: "เครื่องคำนวณผลประโยชน์",
-      subtitle: "ประเมินต้นทุนการปฏิบัติงาน (2026)",
-      media: "ประเภทสื่อ",
-      hours: "จำนวนชั่วโมง",
-      placeholder: "กรอกจำนวน...",
-      rate: "อัตราการใช้",
-      price: "ราคา",
-      select: "กรุณาเลือกประเภท",
-      save: "ประหยัดต้นทุน",
-      footer: "© CHEVRON — ใช้ภายในองค์กรเท่านั้น"
-    }
-  };
-
-  function toggleLang() {
-    lang = lang === "en" ? "th" : "en";
-    const t = text[lang];
-
-    document.getElementById("title").innerText = t.title;
-    document.getElementById("subtitle").innerText = t.subtitle;
-    document.getElementById("media-label").innerText = t.media;
-    document.getElementById("main-input-label").innerText = t.hours;
-    document.getElementById("val-h").placeholder = t.placeholder;
-    document.getElementById("rate-label").innerText = t.rate;
-    document.getElementById("price-label").innerText = t.price;
-    document.getElementById("selected-label").innerText = t.select;
-    document.getElementById("badge-text").innerText = t.save;
-    document.getElementById("footer-text").innerText = t.footer;
+const text = {
+  en: {
+    title: "Benefit Calculator",
+    subtitle: "Operational Cost Estimation (2026)",
+    media: "Media",
+    hours: "Hours",
+    placeholder: "Enter hours...",
+    rate: "Rate",
+    price: "Price",
+    select: "Please select media type",
+    save: "SAVE COST",
+    footer: "© CHEVRON — INTERNAL USE ONLY"
+  },
+  th: {
+    title: "เครื่องคำนวณผลประโยชน์",
+    subtitle: "ประเมินต้นทุนการปฏิบัติงาน (2026)",
+    media: "ประเภทสื่อ",
+    hours: "จำนวนชั่วโมง",
+    placeholder: "กรอกจำนวน...",
+    rate: "อัตราการใช้",
+    price: "ราคา",
+    select: "กรุณาเลือกประเภท",
+    save: "ประหยัดต้นทุน",
+    footer: "© CHEVRON — ใช้ภายในองค์กรเท่านั้น"
   }
+};
 
-  const presets = {
-    gas_pacpp: { rate: 9.17, price: 6000 },
-    condy: { rate: 396, price: 60 },
-    remote: { rate: 0.21, price: 6000 },
-    skl_palq: { rate: 38, price: 0.621 }
-  };
+function toggleLang() {
+  lang = lang === "en" ? "th" : "en";
+  const t = text[lang];
 
-  function applyPreset() {
-    const data = presets[type-select.value];
-    if (!data) return;
+  document.getElementById("title").innerText = t.title;
+  document.getElementById("subtitle").innerText = t.subtitle;
+  document.getElementById("media-label").innerText = t.media;
+  document.getElementById("main-input-label").innerText = t.hours;
+  document.getElementById("val-h").placeholder = t.placeholder;
+  document.getElementById("rate-label").innerText = t.rate;
+  document.getElementById("price-label").innerText = t.price;
+  document.getElementById("selected-label").innerText = t.select;
+  document.getElementById("badge-text").innerText = t.save;
+  document.getElementById("footer-text").innerText = t.footer;
+}
 
-    val-r.value = data.rate;
-    val-p.value = data.price;
-    calculate();
-  }
+const presets = {
+  gas_pacpp: { rate: 9.17, price: 6000 },
+  condy: { rate: 396, price: 60 },
+  remote: { rate: 0.21, price: 6000 },
+  skl_palq: { rate: 38, price: 0.621 }
+};
 
-  function calculate() {
-    const h = parseFloat(val-h.value) || 0;
-    const r = parseFloat(val-r.value) || 0;
-    const p = parseFloat(val-p.value) || 0;
-    const total = h * r * p;
+function applyPreset() {
+  const select = document.getElementById("type-select");
+  const data = presets[select.value];
+  if (!data) return;
 
-    grand-total.innerText = "$" + total.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
+  document.getElementById("val-r").value = data.rate;
+  document.getElementById("val-p").value = data.price;
+  calculate();
+}
+
+function calculate() {
+  const h = parseFloat(document.getElementById("val-h").value) || 0;
+  const r = parseFloat(document.getElementById("val-r").value) || 0;
+  const p = parseFloat(document.getElementById("val-p").value) || 0;
+
+  const total = h * r * p;
+
+  document.getElementById("grand-total").innerText =
+    "$" + total.toLocaleString(undefined, {minimumFractionDigits:2});
+}
 </script>
 
 </body>
