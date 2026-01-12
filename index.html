@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benefit Calculator 2026</title>
+  <style>
+    :root {
+      --primary-blue: #003c78;
+      --accent-gold: #ffb81c;
+      --success-green: #28a745;
+      --bg-gray: #f0f2f5;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-gray);
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      margin: 0;
+    }
+
+    .calculator-card {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .hero {
+      height: 100px;
+      background: var(--primary-blue) linear-gradient(135deg, #003c78 0%, #0056b3 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      color: white;
+    }
+
+    .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
+
+    .content { padding: 20px; }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .full-width { grid-column: span 2; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--primary-blue);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #dde;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+
+    /* ช่องที่แก้ไขไม่ได้ (Fixed) จะแสดงสีเทาและไม่อนุญาตให้พิมพ์ */
+    input[readonly] {
+      background-color: #f1f3f5;
+      color: #495057;
+      border-color: #e9ecef;
+      cursor: not-allowed;
+      font-weight: bold;
+    }
+
+    .result-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid #eef;
+    }
+
+    #selected-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .total-display {
+      color: var(--success-green);
+      font-weight: 800;
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+    }
+
+    .save-cost-badge {
+      display: inline-block;
+      background: var(--success-green);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 400px) {
+      .total-display { font-size: 2rem; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator-card">
+  <div class="hero">
+    <div class="hero-text">
+      <h2>Benefit Calculator</h2>
+      <p>Operational Cost Estimation (2026)</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="input-group">
+      <!-- ส่วนเลือก Media -->
+      <div class="full-width">
+        <label>Media</label>
+        <select id="type-select" onchange="applyPreset()">
+          <option value="">-- Tap to Select Media --</option>
+          <option value="gas_pacpp">Gas / PACPP</option>
+          <option value="condy">CONDY PACPP</option>
+          <option value="remote">Gas Remote Platform</option>
+        </select>
+      </div>
+
+      <!-- ส่วนกรอก Hours -->
+      <div class="full-width">
+        <label>Hours</label>
+        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+      </div>
+
+      <!-- ส่วน Rate และ Price ที่ถูกล็อกค่าไว้ (Fixed & Readonly) -->
+      <div class="field-row">
+        <div>
+          <label>Rate: mmscf/hrs</label>
+          <input type="number" id="val-r" readonly value="0">
+        </div>
+        <div>
+          <label>$mmscf</label>
+          <input type="number" id="val-p" readonly value="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- ส่วนแสดงผล SAVE COST -->
+    <div class="result-section">
+      <div id="selected-label">Please select media type above</div>
+      <div class="total-display" id="grand-total">$0.00</div>
+      <div class="save-cost-badge">SAVE COST</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    © CHEVRON — INTERNAL USE ONLY<br>
+    Optimized for Mobile Devices (Updated 2026)
+  </div>
+</div>
+
+<script>
+  // ค่าตายตัวที่ฟิกไว้ตามเงื่อนไข (Fixed Values)
+  const presets = {
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000 },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60 },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000 }
+  };
+
+  function applyPreset() {
+    const select = document.getElementById('type-select');
+    const data = presets[select.value];
+    
+    if (data) {
+      // อัปเดตค่าที่ฟิกไว้ลงในช่อง Read-only
+      document.getElementById('val-r').value = data.rate;
+      document.getElementById('val-p').value = data.price;
+      document.getElementById('selected-label').innerText = "Selected: " + data.label;
+    } else {
+      // กรณีไม่ได้เลือก ให้กลับเป็น 0
+      document.getElementById('val-r').value = 0;
+      document.getElementById('val-p').value = 0;
+      document.getElementById('selected-label').innerText = "Please select media type above";
+    }
+    calculate(); 
+  }
+
+  function calculate() {
+    const h = parseFloat(document.getElementById('val-h').value) || 0;
+    const r = parseFloat(document.getElementById('val-r').value) || 0;
+    const p = parseFloat(document.getElementById('val-p').value) || 0;
+    
+    // สูตรคำนวณ Hours * Rate * Price
+    const total = h * r * p;
+    
+    // แสดงผลลัพธ์ในรูปแบบสกุลเงิน $0.00
+    document.getElementById('grand-total').innerText = 
+      '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }
+</script>
+
+</body>
+</html>
