@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benefit Calculator 2026</title>
+
   <style>
     :root {
       --primary-blue: #003c78;
@@ -40,34 +41,26 @@
       color: white;
       justify-content: space-between;
     }
-    
-    .logo {
-        height: 60px; /* ปรับขนาดโลโก้ตามต้องการ */
-        margin-right: 15px;
-    }
 
-    .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+    .logo { height: 60px; margin-right: 15px; }
+
+    .hero-text h2 { margin: 0; font-size: 1.4rem; }
     .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
+
+    .lang-btn {
+      background: #fff;
+      color: #003c78;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
     .content { padding: 20px; }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .full-width { grid-column: span 2; }
-
     label {
-      display: block;
       font-size: 0.75rem;
       font-weight: bold;
       color: var(--primary-blue);
@@ -81,15 +74,10 @@
       border: 1.5px solid #dde;
       border-radius: 10px;
       font-size: 1rem;
-      box-sizing: border-box;
-      transition: all 0.3s;
     }
 
     input[readonly] {
       background-color: #f1f3f5;
-      color: #495057;
-      border-color: #e9ecef;
-      cursor: not-allowed;
       font-weight: bold;
     }
 
@@ -98,32 +86,12 @@
       padding: 25px;
       border-radius: 15px;
       text-align: center;
-      border: 2px solid #eef;
-    }
-
-    #selected-label {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 10px;
-      font-weight: 600;
     }
 
     .total-display {
       color: var(--success-green);
       font-weight: 800;
       font-size: 2.5rem;
-      margin-bottom: 5px;
-    }
-
-    .save-cost-badge {
-      display: inline-block;
-      background: var(--success-green);
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 1px;
     }
 
     .footer {
@@ -132,130 +100,125 @@
       font-size: 0.7rem;
       color: #aaa;
     }
-
-    @media (max-width: 400px) {
-      .total-display { font-size: 2rem; }
-      .field-row { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
+
 <body>
 
 <div class="calculator-card">
   <div class="hero">
-    <!-- Image Tag สำหรับโลโก้จากไฟล์ในเครื่อง -->
-    <img src="logo.png" alt="Company Logo" class="logo">
+    <img src="logo.png" class="logo">
     <div class="hero-text">
-      <h2>Benefit Calculator</h2>
-      <p>Operational Cost Estimation (2026)</p>
+      <h2 id="title">Benefit Calculator</h2>
+      <p id="subtitle">Operational Cost Estimation (2026)</p>
     </div>
+    <button class="lang-btn" onclick="toggleLang()">TH / EN</button>
   </div>
 
   <div class="content">
-    <div class="input-group">
-      <div class="full-width">
-        <label>Media</label>
-        <select id="type-select" onchange="applyPreset()">
-          <option value="">-- Tap to Select Media --</option>
-          <option value="gas_pacpp">Gas / PACPP</option>
-          <option value="condy">CONDY PACPP</option>
-          <option value="remote">Gas Remote Platform</option>
-          <option value="skl_palq">Routh SKL-PALQ</option>
-        </select>
-      </div>
 
-      <div class="full-width">
-        <label id="main-input-label">Hours</label>
-        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
-      </div>
+    <label id="media-label">Media</label>
+    <select id="type-select" onchange="applyPreset()">
+      <option value="">-- Tap to Select Media --</option>
+      <option value="gas_pacpp">Gas / PACPP</option>
+      <option value="condy">CONDY PACPP</option>
+      <option value="remote">Gas Remote Platform</option>
+      <option value="skl_palq">Routh SKL-PALQ</option>
+    </select>
 
-      <div class="field-row">
-        <div>
-          <label id="rate-label">Rate: mmscf/hrs</label>
-          <input type="number" id="val-r" readonly value="0">
-        </div>
-        <div>
-          <label id="price-label">$mmscf</label>
-          <input type="number" id="val-p" readonly value="0">
-        </div>
-      </div>
-    </div>
+    <label id="main-input-label">Hours</label>
+    <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+
+    <label id="rate-label">Rate</label>
+    <input type="number" id="val-r" readonly>
+
+    <label id="price-label">Price</label>
+    <input type="number" id="val-p" readonly>
 
     <div class="result-section">
-      <div id="selected-label">Please select media type above</div>
+      <div id="selected-label">Please select media type</div>
       <div class="total-display" id="grand-total">$0.00</div>
-      <div class="save-cost-badge" id="badge-text">SAVE COST</div>
+      <div id="badge-text">SAVE COST</div>
     </div>
   </div>
 
-  <div class="footer">
-    © CHEVRON — INTERNAL USE ONLY<br>
-    Optimized for Mobile Devices (Updated 2026)
+  <div class="footer" id="footer-text">
+    © CHEVRON — INTERNAL USE ONLY<br>Optimized for Mobile Devices
   </div>
 </div>
 
 <script>
+  let lang = "en";
+
+  const text = {
+    en: {
+      title: "Benefit Calculator",
+      subtitle: "Operational Cost Estimation (2026)",
+      media: "Media",
+      hours: "Hours",
+      placeholder: "Enter hours...",
+      rate: "Rate",
+      price: "Price",
+      select: "Please select media type",
+      save: "SAVE COST",
+      footer: "© CHEVRON — INTERNAL USE ONLY"
+    },
+    th: {
+      title: "เครื่องคำนวณผลประโยชน์",
+      subtitle: "ประเมินต้นทุนการปฏิบัติงาน (2026)",
+      media: "ประเภทสื่อ",
+      hours: "จำนวนชั่วโมง",
+      placeholder: "กรอกจำนวน...",
+      rate: "อัตราการใช้",
+      price: "ราคา",
+      select: "กรุณาเลือกประเภท",
+      save: "ประหยัดต้นทุน",
+      footer: "© CHEVRON — ใช้ภายในองค์กรเท่านั้น"
+    }
+  };
+
+  function toggleLang() {
+    lang = lang === "en" ? "th" : "en";
+    const t = text[lang];
+
+    document.getElementById("title").innerText = t.title;
+    document.getElementById("subtitle").innerText = t.subtitle;
+    document.getElementById("media-label").innerText = t.media;
+    document.getElementById("main-input-label").innerText = t.hours;
+    document.getElementById("val-h").placeholder = t.placeholder;
+    document.getElementById("rate-label").innerText = t.rate;
+    document.getElementById("price-label").innerText = t.price;
+    document.getElementById("selected-label").innerText = t.select;
+    document.getElementById("badge-text").innerText = t.save;
+    document.getElementById("footer-text").innerText = t.footer;
+  }
+
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, isRouth: false },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   isRouth: false },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, isRouth: false },
-    skl_palq:  { label: "Routh SKL-PALQ", rate: 38, price: 0.621, isRouth: true }
+    gas_pacpp: { rate: 9.17, price: 6000 },
+    condy: { rate: 396, price: 60 },
+    remote: { rate: 0.21, price: 6000 },
+    skl_palq: { rate: 38, price: 0.621 }
   };
 
   function applyPreset() {
-    const select = document.getElementById('type-select');
-    const data = presets[select.value];
-    const mainInputLabel = document.getElementById('main-input-label');
-    const rateLabel = document.getElementById('rate-label');
-    const priceLabel = document.getElementById('price-label');
-    const badgeText = document.getElementById('badge-text');
+    const data = presets[type-select.value];
+    if (!data) return;
 
-    if (data) {
-      document.getElementById('val-r').value = data.rate;
-      document.getElementById('val-p').value = data.price;
-      document.getElementById('selected-label').innerText = "Selected: " + data.label;
-      
-      if (data.isRouth) {
-          mainInputLabel.innerText = "Distance (Mile)";
-          rateLabel.innerText = "Liter/Mile";
-          priceLabel.innerText = "$/Liter";
-          badgeText.innerText = "ROUND-TRIP COST";
-      } else {
-          mainInputLabel.innerText = "Hours";
-          rateLabel.innerText = "Rate: mmscf/hrs";
-          priceLabel.innerText = "$/mmscf";
-          badgeText.innerText = "SAVE COST";
-      }
-
-    } else {
-      document.getElementById('val-r').value = 0;
-      document.getElementById('val-p').value = 0;
-      document.getElementById('selected-label').innerText = "Please select media type above";
-      mainInputLabel.innerText = "Hours";
-      rateLabel.innerText = "Rate: mmscf/hrs";
-      priceLabel.innerText = "$/mmscf";
-      badgeText.innerText = "SAVE COST";
-    }
-    calculate(); 
+    val-r.value = data.rate;
+    val-p.value = data.price;
+    calculate();
   }
 
   function calculate() {
-    const select = document.getElementById('type-select');
-    const selectedType = select.value;
-    const h = parseFloat(document.getElementById('val-h').value) || 0;
-    const r = parseFloat(document.getElementById('val-r').value) || 0;
-    const p = parseFloat(document.getElementById('val-p').value) || 0;
-    
-    let total = 0;
-    
-    if (selectedType && presets[selectedType].isRouth) {
-        total = h * r * p * 2; 
-    } else {
-        total = h * r * p;
-    }
-    
-    document.getElementById('grand-total').innerText = 
-      '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const h = parseFloat(val-h.value) || 0;
+    const r = parseFloat(val-r.value) || 0;
+    const p = parseFloat(val-p.value) || 0;
+    const total = h * r * p;
+
+    grand-total.innerText = "$" + total.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   }
 </script>
 
