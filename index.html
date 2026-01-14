@@ -19,37 +19,33 @@
       justify-content: center;
       padding: 10px;
       margin: 0;
+      /* ใช้รูปภาพเต็มหน้าจอเป็นฉากหลัง */
+      background-image: url('pailin_rig.jpg'); 
+      background-size: cover; 
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     .calculator-card {
       width: 100%;
       max-width: 500px;
-      background: white;
+      background: var(--primary-blue); /* สีพื้นหลัง Card เป็นน้ำเงินเข้ม */
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3); /* เงาเข้มขึ้น */
       overflow: hidden;
-      margin-top: 10px;
-      
-      /* --- โค้ดสำหรับฉากหลังที่เพิ่มเข้ามา --- */
-      /* ใช้รูปภาพแท่นไพลินเป็นฉากหลังหลักของตัว Card */
-      background-image: url('pailin_rig.jpg'); 
-      background-size: cover; 
-      background-position: center;
-      background-repeat: no-repeat;
-      /* ------------------------------------- */
+      margin-top: 50px; /* ย้าย Card ลงมาหน่อย */
+      color: white; /* เปลี่ยนสีตัวอักษรหลักเป็นสีขาว */
     }
 
     .hero {
       height: 100px;
-      background: var(--primary-blue) linear-gradient(135deg, #003c78 0%, #0056b3 100%);
+      background: rgba(0, 0, 0, 0.2); /* โปร่งแสงเล็กน้อยทับพื้นหลัง Card */
       display: flex;
       align-items: center;
       padding: 0 20px;
-      color: white;
       justify-content: space-between;
-      /* --- เพิ่มความโปร่งใสให้ hero เพื่อให้เห็น background card ด้านหลังได้ --- */
-      background-color: rgba(0, 60, 120, 0.75); 
-      /* ------------------------------------------------------------------ */
+      border-bottom: 2px solid var(--accent-gold); /* เส้นแบ่งสีทอง */
     }
     
     .logo {
@@ -57,14 +53,13 @@
         margin-right: 15px;
     }
 
-    .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
-    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
+    .hero-text h2 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.7; }
 
     .content { 
         padding: 20px; 
-        /* --- เพิ่มความโปร่งใสให้ content เพื่อให้เห็น background card ด้านหลังได้ --- */
-        background-color: rgba(255, 255, 255, 0.85);
-        /* ------------------------------------------------------------------ */
+        background-color: rgba(255, 255, 255, 0.95); /* พื้นหลังขาวทึบขึ้นเพื่อการอ่านที่ดี */
+        color: #333;
     }
 
     .input-group {
@@ -96,38 +91,40 @@
       padding: 12px;
       border: 1.5px solid #dde;
       border-radius: 10px;
-      font-size: 1;
+      font-size: 1rem;
       box-sizing: border-box;
       transition: all 0.3s;
     }
 
     input[readonly] {
-      background-color: #f1f3f5;
-      color: #495057;
-      border-color: #e9ecef;
+      background-color: #e9ecef;
+      color: var(--primary-blue);
+      border-color: #dde;
       cursor: not-allowed;
       font-weight: bold;
     }
 
     .result-section {
-      background: #f8f9fa;
+      background: var(--primary-blue); /* ใช้สีน้ำเงินเข้มสำหรับส่วนผลลัพธ์ */
       padding: 25px;
       border-radius: 15px;
       text-align: center;
-      border: 2px solid #eef;
+      border: 2px solid var(--accent-gold); /* กรอบสีทอง */
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     #selected-label {
       font-size: 0.9rem;
-      color: #666;
+      color: rgba(255, 255, 255, 0.8);
       margin-bottom: 10px;
       font-weight: 600;
     }
 
     .total-display {
-      color: var(--success-green);
+      color: var(--accent-gold); /* ใช้สีทองสำหรับยอดรวม */
       font-weight: 800;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       margin-bottom: 5px;
     }
 
@@ -144,12 +141,10 @@
 
     .footer {
       text-align: center;
-      padding: 20px;
+      padding: 15px;
       font-size: 0.7rem;
-      color: #aaa;
-      /* --- เพิ่มความโปร่งใสให้ footer --- */
-      background-color: rgba(255, 255, 255, 0.7);
-      /* ------------------------------- */
+      color: rgba(255, 255, 255, 0.6);
+      background-color: rgba(0, 0, 0, 0.2);
     }
 
     @media (max-width: 400px) {
