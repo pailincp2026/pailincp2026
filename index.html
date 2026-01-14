@@ -24,12 +24,13 @@
     .calculator-card {
       width: 100%; 
       max-width: 500px;
-      background: white;
+      background: white; /* พื้นหลังหลักเป็นสีขาว */
       border-radius: 0; 
       box-shadow: none; 
       overflow: hidden;
       margin-top: 0;
       min-height: 100vh; 
+      /* ลบ background-image ออกจากตรงนี้ */
     }
 
     .hero {
@@ -40,16 +41,30 @@
       color: white;
       justify-content: space-between;
       border-bottom: 3px solid var(--accent-gold); 
-      background-image: linear-gradient(rgba(0, 60, 120, 0.85), rgba(0, 60, 120, 0.85)), url('pailin_rig.jpg'); 
-      background-size: cover;
+      
+      /* --- ใส่รูปภาพพื้นหลังที่โดดเด่นเฉพาะในแถบ hero นี้ --- */
+      background-image: url('pailin_rig.jpg'); 
+      background-size: cover; /* ให้เต็มพื้นที่แถบ */
       background-position: center;
+      /* เพิ่มสีน้ำเงินเข้มทับเพื่อให้ข้อความอ่านง่ายขึ้น */
+      background-color: rgba(0, 60, 120, 0.85); 
+      /* ------------------------------------------------ */
     }
     
-    .logo { height: 70px; margin-right: 15px; }
+    .logo {
+        height: 70px; 
+        margin-right: 15px;
+    }
+
     .hero-text h2 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
     .hero-text p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
 
-    .content { padding: 20px; background-color: #fff; color: #333; }
+    .content { 
+        padding: 20px; 
+        /* กลับไปใช้พื้นหลังสีขาวทึบแบบปกติ */
+        background-color: #fff; 
+        color: #333;
+    }
 
     .input-group {
       display: flex;
@@ -57,6 +72,14 @@
       gap: 15px;
       margin-bottom: 25px;
     }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .full-width { grid-column: span 2; }
 
     label {
       display: block;
@@ -67,22 +90,31 @@
       text-transform: uppercase;
     }
 
-    input {
+    select, input {
       width: 100%;
-      padding: 15px;
-      border: 2px solid var(--primary-blue); 
-      border-radius: 8px; 
-      font-size: 1.2rem;
+      padding: 12px;
+      border: 1px solid var(--primary-blue); 
+      border-radius: 5px; 
+      font-size: 1rem;
       box-sizing: border-box;
-      outline: none;
+      transition: all 0.3s;
+    }
+
+    input[readonly] {
+      background-color: #e9ecef;
+      color: var(--primary-blue);
+      border-color: #ccc;
+      cursor: not-allowed;
+      font-weight: bold;
     }
 
     .result-section {
       background: #f8f9fa;
       padding: 25px;
-      border-radius: 12px;
+      border-radius: 8px;
       text-align: center;
       border: 1px solid var(--primary-blue);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
     }
 
     #selected-label {
@@ -95,33 +127,36 @@
     .total-display {
       color: var(--success-green); 
       font-weight: 800;
-      font-size: 3rem;
-      margin-bottom: 10px;
+      font-size: 2.8rem;
+      margin-bottom: 5px;
     }
 
     .save-cost-badge {
       display: inline-block;
       background: var(--success-green);
       color: white;
-      padding: 6px 20px;
+      padding: 5px 15px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: bold;
+      letter-spacing: 1px;
     }
 
     .footer {
       text-align: center;
-      padding: 20px;
-      font-size: 0.75rem;
+      padding: 15px;
+      font-size: 0.7rem;
       color: rgba(0, 60, 120, 0.7); 
+      background-color: #fff; /* พื้นหลังสีขาวทึบ */
       border-top: 1px solid #eee;
     }
 
+    /* Desktop View: เพิ่มเงาและขอบมนกลับมาเมื่อหน้าจอใหญ่ขึ้น */
     @media (min-width: 501px) {
       .calculator-card {
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        margin-top: 40px;
+        margin-top: 50px;
         min-height: auto;
       }
     }
@@ -141,52 +176,77 @@
   <div class="content">
     <div class="input-group">
       <div class="full-width">
-        <label>Weight (KG)</label>
-        <input type="number" id="val-kg" placeholder="Enter weight in KG..." oninput="calculate()">
+        <label>Media</label>
+        <select id="type-select" onchange="applyPreset()">
+          <option value="">-- Tap to Select Media --</option>
+          <option value="gas_pacpp">Gas / PACPP</option>
+          <option value="condy">CONDY PACPP</option>
+          <option value="remote">Gas Remote Platform</option>
+        </select>
+      </div>
+
+      <div class="full-width">
+        <label id="main-input-label">Hours</label>
+        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Rate: mmscf/hrs</label>
+          <input type="number" id="val-r" readonly value="0">
+        </div>
+        <div>
+          <label>$mmscf</label>
+          <input type="number" id="val-p" readonly value="0">
+        </div>
       </div>
     </div>
 
     <div class="result-section">
-      <div id="selected-label">Calculation: (KG × 38 × 0.621) × 2</div>
+      <div id="selected-label">Please select media type above</div>
       <div class="total-display" id="grand-total">$0.00</div>
-      <div class="save-cost-badge">ESTIMATED SAVING</div>
+      <div class="save-cost-badge">SAVE COST</div>
     </div>
   </div>
 
   <div class="footer">
     © CHEVRON — INTERNAL USE ONLY<br>
-    SKL-PALQ Logic Applied (Updated 2026)
+    Optimized for Mobile Devices (Updated 2026)
   </div>
 </div>
 
 <script>
-  function calculate() {
-    // ดึงค่า KG จาก input
-    const kg = parseFloat(document.getElementById('val-kg').value) || 0;
-    
-    // สูตรคำนวณตามที่คุณระบุ:
-    // 1. KG x 38 (Liters)
-    // 2. Liters x 0.621 (Single Trip Price)
-    // 3. Trip Price x 2 (Round Trip Total)
-    
-    const liters = kg * 38;
-    const pricePerTrip = liters * 0.621;
-    const total = pricePerTrip * 2;
-    
-    // แสดงผลลัพธ์ในรูปแบบเงินตรา
-    document.getElementById('grand-total').innerText = 
-      '$' + total.toLocaleString(undefined, {
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2
-      });
+  const presets = {
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000 },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60 },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000 }
+  };
 
-    // อัปเดตข้อมูลรายละเอียด
-    if (kg > 0) {
-      document.getElementById('selected-label').innerText = 
-        kg + " KG → " + liters.toLocaleString() + " L → Round Trip";
+  function applyPreset() {
+    const select = document.getElementById('type-select');
+    const data = presets[select.value];
+
+    if (data) {
+      document.getElementById('val-r').value = data.rate;
+      document.getElementById('val-p').value = data.price;
+      document.getElementById('selected-label').innerText = "Selected: " + data.label;
     } else {
-      document.getElementById('selected-label').innerText = "Calculation: (KG × 38 × 0.621) × 2";
+      document.getElementById('val-r').value = 0;
+      document.getElementById('val-p').value = 0;
+      document.getElementById('selected-label').innerText = "Please select media type above";
     }
+    calculate(); 
+  }
+
+  function calculate() {
+    const h = parseFloat(document.getElementById('val-h').value) || 0;
+    const r = parseFloat(document.getElementById('val-r').value) || 0;
+    const p = parseFloat(document.getElementById('val-p').value) || 0;
+    
+    const total = h * r * p;
+    
+    document.getElementById('grand-total').innerText = 
+      '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 </script>
 
