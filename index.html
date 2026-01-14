@@ -19,10 +19,9 @@
       justify-content: center;
       min-height: 100vh;
       background-color: #001a33;
-      
-      /* คุมโทนภาพ offshore.JPG ให้ดูแพงด้วย Overlay สีน้ำเงินลึก */
+      /* คุมโทนภาพ offshore.JPG แบบโปร่งใสและดูแพง */
       background-image: 
-        linear-gradient(rgba(0, 30, 60, 0.45), rgba(0, 20, 40, 0.75)),
+        linear-gradient(rgba(0, 30, 60, 0.4), rgba(0, 20, 40, 0.6)),
         url('offshore.JPG'); 
       background-size: cover;
       background-position: center;
@@ -32,13 +31,13 @@
     .calculator-card {
       width: 100%; 
       max-width: 500px;
-      background: rgba(255, 255, 255, 0.08); 
-      backdrop-filter: blur(15px) saturate(120%);
-      -webkit-backdrop-filter: blur(15px) saturate(120%);
+      /* ปรับพื้นหลังการ์ดให้โปร่งใสสูงแบบ Glassmorphism */
+      background: rgba(255, 255, 255, 0.05); 
+      backdrop-filter: blur(12px) saturate(110%);
+      -webkit-backdrop-filter: blur(12px) saturate(110%);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      box-sizing: border-box;
     }
 
     .hero {
@@ -50,7 +49,7 @@
       justify-content: space-between;
       border-bottom: 4px solid var(--accent-gold); 
       background-image: 
-        linear-gradient(to right, rgba(0, 45, 90, 0.8), rgba(0, 45, 90, 0.4)),
+        linear-gradient(to right, rgba(0, 45, 90, 0.7), rgba(0, 45, 90, 0.3)),
         url('pailin_rig.jpg'); 
       background-size: cover;
       background-position: center;
@@ -58,14 +57,14 @@
     
     .logo {
         height: 75px; 
-        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
     }
 
-    .hero-text h2 { margin: 0; font-size: 1.6rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
-    .hero-text p { margin: 0; font-size: 0.85rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
+    .hero-text h2 { margin: 0; font-size: 1.6rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
+    .hero-text p { margin: 0; font-size: 0.85rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
 
     .content { 
-        padding: 30px 25px; 
+        padding: 30px 20px; 
         flex-grow: 1;
     }
 
@@ -76,70 +75,78 @@
       color: #fff; 
       margin-bottom: 8px;
       text-transform: uppercase;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
     }
 
     select, input {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       border: 1px solid rgba(255, 255, 255, 0.3); 
       border-radius: 12px; 
       font-size: 1rem;
-      background: rgba(255, 255, 255, 0.95); 
+      background: rgba(255, 255, 255, 0.9); 
       color: var(--primary-blue);
       margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    input[readonly] {
+      background: rgba(230, 235, 240, 0.8);
+      color: #444;
+    }
+
+    /* --- เรียง Rate และ $mmscf เป็น 2 คอลัมน์ --- */
+    .row-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
     .result-section {
-      background: rgba(255, 255, 255, 0.98); 
-      padding: 30px;
-      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.96); 
+      padding: 25px;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); 
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4); 
+      margin-top: 10px;
     }
 
     .total-display {
       color: var(--success-green); 
       font-weight: 800;
-      font-size: 3.5rem;
-      margin: 10px 0;
+      font-size: 3.2rem;
+      margin: 5px 0;
     }
 
     .save-cost-badge {
       display: inline-block;
       background: var(--success-green);
       color: white;
-      padding: 14px 40px;
-      border-radius: 35px;
+      padding: 12px 35px;
+      border-radius: 30px;
       font-size: 0.9rem;
       font-weight: bold;
       border: none;
       cursor: pointer;
     }
 
-    /* --- ส่วนที่แก้ไข: เลื่อน Footer ขึ้นมาให้เหมาะกับ Mobile --- */
     .footer {
       text-align: center;
-      /* เพิ่ม Padding ด้านล่างมากขึ้นเพื่อหลบแถบปุ่มกด iPhone/Android */
-      padding: 30px 25px 60px 25px; 
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.85); 
-      background-color: rgba(0, 10, 20, 0.4); 
-      line-height: 1.6;
-      text-shadow: 1px 1px 3px rgba(0,0,0,1);
+      /* ดันฟุตเตอร์ขึ้นมาเพื่อความเหมาะสมบนโทรศัพท์ */
+      padding: 20px 20px 45px 20px; 
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.9); 
+      background-color: rgba(0, 0, 0, 0.3); 
+      line-height: 1.5;
     }
 
     @media (min-width: 501px) {
       .calculator-card {
         margin: 40px 0;
-        border-radius: 30px;
+        border-radius: 25px;
         min-height: auto;
-        border: 1px solid rgba(255, 255, 255, 0.2);
       }
-      .footer {
-        padding: 25px; /* หน้าจอใหญ่ใช้ระยะห่างปกติ */
-        border-radius: 0 0 30px 30px;
-      }
+      .footer { padding-bottom: 25px; }
     }
   </style>
 </head>
@@ -166,7 +173,7 @@
     <label>Hours</label>
     <input type="number" id="val-h" placeholder="0" oninput="calculate()">
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div class="row-grid">
       <div>
         <label>Rate: mmscf/hrs</label>
         <input type="number" id="val-r" readonly value="0">
@@ -178,7 +185,7 @@
     </div>
 
     <div class="result-section">
-      <div id="selected-label" style="font-weight: 600; color: #666;">Waiting for selection...</div>
+      <div id="selected-label" style="font-weight: 600; color: #555;">Waiting for selection...</div>
       <div class="total-display" id="grand-total">$0.00</div>
       <button class="save-cost-badge">SAVE COST</button>
     </div>
