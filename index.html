@@ -24,13 +24,12 @@
     .calculator-card {
       width: 100%; 
       max-width: 500px;
-      background: white; /* พื้นหลังหลักเป็นสีขาว */
+      background: white;
       border-radius: 0; 
       box-shadow: none; 
       overflow: hidden;
       margin-top: 0;
       min-height: 100vh; 
-      /* ลบ background-image ออกจากตรงนี้ */
     }
 
     .hero {
@@ -41,30 +40,17 @@
       color: white;
       justify-content: space-between;
       border-bottom: 3px solid var(--accent-gold); 
-      
-      /* --- ใส่รูปภาพพื้นหลังที่โดดเด่นเฉพาะในแถบ hero นี้ --- */
       background-image: url('pailin_rig.jpg'); 
-      background-size: cover; /* ให้เต็มพื้นที่แถบ */
+      background-size: cover;
       background-position: center;
-      /* เพิ่มสีน้ำเงินเข้มทับเพื่อให้ข้อความอ่านง่ายขึ้น */
       background-color: rgba(0, 60, 120, 0.85); 
-      /* ------------------------------------------------ */
     }
     
-    .logo {
-        height: 70px; 
-        margin-right: 15px;
-    }
-
+    .logo { height: 70px; margin-right: 15px; }
     .hero-text h2 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
     .hero-text p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
 
-    .content { 
-        padding: 20px; 
-        /* กลับไปใช้พื้นหลังสีขาวทึบแบบปกติ */
-        background-color: #fff; 
-        color: #333;
-    }
+    .content { padding: 20px; background-color: #fff; color: #333; }
 
     .input-group {
       display: flex;
@@ -147,11 +133,10 @@
       padding: 15px;
       font-size: 0.7rem;
       color: rgba(0, 60, 120, 0.7); 
-      background-color: #fff; /* พื้นหลังสีขาวทึบ */
+      background-color: #fff;
       border-top: 1px solid #eee;
     }
 
-    /* Desktop View: เพิ่มเงาและขอบมนกลับมาเมื่อหน้าจอใหญ่ขึ้น */
     @media (min-width: 501px) {
       .calculator-card {
         border-radius: 20px;
@@ -179,6 +164,7 @@
         <label>Media</label>
         <select id="type-select" onchange="applyPreset()">
           <option value="">-- Tap to Select Media --</option>
+          <option value="skl_palq">SKL-PALQ (Fuel Logic)</option>
           <option value="gas_pacpp">Gas / PACPP</option>
           <option value="condy">CONDY PACPP</option>
           <option value="remote">Gas Remote Platform</option>
@@ -186,26 +172,26 @@
       </div>
 
       <div class="full-width">
-        <label id="main-input-label">Hours</label>
-        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+        <label id="main-input-label">Weight (KG)</label>
+        <input type="number" id="val-h" placeholder="Enter value..." oninput="calculate()">
       </div>
 
-      <div class="field-row">
+      <div class="field-row" style="display: none;"> <!-- ซ่อนส่วนนี้ไว้เพื่อให้ UI สะอาดตา แต่ยังรักษาโครงสร้างเดิม -->
         <div>
-          <label>Rate: mmscf/hrs</label>
+          <label>Rate</label>
           <input type="number" id="val-r" readonly value="0">
         </div>
         <div>
-          <label>$mmscf</label>
+          <label>Price</label>
           <input type="number" id="val-p" readonly value="0">
         </div>
       </div>
     </div>
 
     <div class="result-section">
-      <div id="selected-label">Please select media type above</div>
+      <div id="selected-label">Please enter weight to calculate</div>
       <div class="total-display" id="grand-total">$0.00</div>
-      <div class="save-cost-badge">SAVE COST</div>
+      <div class="save-cost-badge">ROUND TRIP LOGIC</div>
     </div>
   </div>
 
@@ -216,7 +202,9 @@
 </div>
 
 <script>
+  // เก็บค่า Preset เดิมไว้เพื่อรองรับโครงสร้างเดิม
   const presets = {
+    skl_palq:  { label: "SKL-PALQ", rate: 38, price: 0.621 },
     gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000 },
     condy:     { label: "CONDY PACPP", rate: 396,  price: 60 },
     remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000 }
@@ -225,26 +213,23 @@
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
-
     if (data) {
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
       document.getElementById('selected-label').innerText = "Selected: " + data.label;
-    } else {
-      document.getElementById('val-r').value = 0;
-      document.getElementById('val-p').value = 0;
-      document.getElementById('selected-label').innerText = "Please select media type above";
     }
     calculate(); 
   }
 
   function calculate() {
-    const h = parseFloat(document.getElementById('val-h').value) || 0;
-    const r = parseFloat(document.getElementById('val-r').value) || 0;
-    const p = parseFloat(document.getElementById('val-p').value) || 0;
+    // ดึงค่าตัวเลขจากช่องกรอกข้อมูล
+    const inputVal = parseFloat(document.getElementById('val-h').value) || 0;
     
-    const total = h * r * p;
+    // สูตรคำนวณใหม่ตามที่คุณต้องการ: (ค่าที่กรอก x 38 x 0.621) x 2
+    // 38 = ตัวคูณลิตร, 0.621 = ราคาต่อลิตร, 2 = ไป-กลับ
+    const total = (inputVal * 38 * 0.621) * 2;
     
+    // แสดงผลลัพธ์
     document.getElementById('grand-total').innerText = 
       '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
