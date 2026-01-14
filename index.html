@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Benefit Calculator</title>
+  <title>Benefit Calculator 2026</title>
   <style>
+    :root {
+      --primary-blue: #003c78;
+      --accent-gold: #ffb81c;
+      --success-green: #28a745;
+      --bg-gray: #f0f2f5;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-gray);
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 10px;
       margin: 0;
     }
 
@@ -18,94 +25,117 @@
       width: 100%;
       max-width: 500px;
       background: white;
-      border-radius: 15px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       overflow: hidden;
+      margin-top: 10px;
     }
 
     .hero {
-      position: relative;
-      height: 120px;
-      background: #003c78 linear-gradient(135deg, #003c78 0%, #0056b3 100%);
+      height: 100px;
+      background: var(--primary-blue) linear-gradient(135deg, #003c78 0%, #0056b3 100%);
       display: flex;
-      align-items: flex-end;
-      padding: 20px;
-    }
-
-    .hero-overlay {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 10px 15px;
-      border-radius: 8px;
+      align-items: center;
+      padding: 0 20px;
       color: white;
-      border-left: 5px solid #ffb81c;
-      backdrop-filter: blur(5px);
+      justify-content: space-between;
+    }
+    
+    .logo {
+        height: 60px; /* ปรับขนาดโลโก้ตามต้องการ */
+        margin-right: 15px;
     }
 
-    .hero-overlay h2 { margin: 0; font-size: 20px; }
-    .hero-overlay p { margin: 0; font-size: 12px; opacity: 0.9; }
+    .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
 
-    .content { padding: 25px; }
+    .content { padding: 20px; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
-    th {
-      background-color: #003c78;
-      color: white;
-      padding: 12px 8px;
-      font-size: 13px;
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .full-width { grid-column: span 2; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--primary-blue);
+      margin-bottom: 5px;
       text-transform: uppercase;
     }
 
-    td {
-      padding: 10px 5px;
-      border: 1px solid #eee;
-    }
-
-    /* ขยายช่อง Type ให้กว้างขึ้น */
-    .col-type { width: 40%; }
-    
     select, input {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
-
-    select { cursor: pointer; background-color: #f9f9f9; }
-
-    .result-section {
-      background-color: #f8f9fa;
-      padding: 20px;
+      padding: 12px;
+      border: 1.5px solid #dde;
       border-radius: 10px;
-      text-align: center;
-      border: 1px solid #e9ecef;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: all 0.3s;
     }
 
-    /* แสดงชื่อ Type ที่เลือก */
-    #selected-type-display {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 5px;
+    input[readonly] {
+      background-color: #f1f3f5;
+      color: #495057;
+      border-color: #e9ecef;
+      cursor: not-allowed;
       font-weight: bold;
     }
 
-    .total-display {
-      color: #28a745;
-      font-weight: 800;
-      font-size: 24px;
+    .result-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid #eef;
     }
 
-    .footer-text {
+    #selected-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .total-display {
+      color: var(--success-green);
+      font-weight: 800;
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+    }
+
+    .save-cost-badge {
+      display: inline-block;
+      background: var(--success-green);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .footer {
       text-align: center;
-      font-size: 11px;
-      color: #bbb;
-      margin-top: 20px;
+      padding: 20px;
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+
+    @media (max-width: 400px) {
+      .total-display { font-size: 2rem; }
+      .field-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -113,83 +143,116 @@
 
 <div class="calculator-card">
   <div class="hero">
-    <div class="hero-overlay">
+    <!-- Image Tag สำหรับโลโก้จากไฟล์ในเครื่อง -->
+    <img src="logo.png" alt="Company Logo" class="logo">
+    <div class="hero-text">
       <h2>Benefit Calculator</h2>
-      <p>Operational Cost Saving Estimation</p>
+      <p>Operational Cost Estimation (2026)</p>
     </div>
   </div>
 
   <div class="content">
-    <table>
-      <thead>
-        <tr>
-          <th class="col-type">Type (Select Full Name)</th>
-          <th>Hours</th>
-          <th>Rate</th>
-          <th>Price ($)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <select id="type-select" onchange="applyPreset()">
-              <option value="">-- Choose Type --</option>
-              <option value="gas_pacpp">Gas / PACPP (Full Operations)</option>
-              <option value="condy">CONDY PACPP (Condensate)</option>
-              <option value="remote">Gas Remote Platform (Offshore)</option>
-            </select>
-          </td>
-          <td><input type="number" id="val-h" value="0" oninput="calculate()"></td>
-          <td><input type="number" step="0.01" id="val-r" value="0" oninput="calculate()"></td>
-          <td><input type="number" id="val-p" value="0" oninput="calculate()"></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="input-group">
+      <div class="full-width">
+        <label>Media</label>
+        <select id="type-select" onchange="applyPreset()">
+          <option value="">-- Tap to Select Media --</option>
+          <option value="gas_pacpp">Gas / PACPP</option>
+          <option value="condy">CONDY PACPP</option>
+          <option value="remote">Gas Remote Platform</option>
+          <option value="skl_palq">Routh SKL-PALQ</option>
+        </select>
+      </div>
+
+      <div class="full-width">
+        <label id="main-input-label">Hours</label>
+        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label id="rate-label">Rate: mmscf/hrs</label>
+          <input type="number" id="val-r" readonly value="0">
+        </div>
+        <div>
+          <label id="price-label">$mmscf</label>
+          <input type="number" id="val-p" readonly value="0">
+        </div>
+      </div>
+    </div>
 
     <div class="result-section">
-      <div id="selected-type-display">Please select an operation type</div>
-      <div class="total-display" id="grand-total">
-        $0.00
-      </div>
-      <div style="font-size: 11px; color: #999; margin-top: 5px;">ESTIMATED SAVINGS</div>
+      <div id="selected-label">Please select media type above</div>
+      <div class="total-display" id="grand-total">$0.00</div>
+      <div class="save-cost-badge" id="badge-text">SAVE COST</div>
     </div>
+  </div>
 
-    <div class="footer-text">
-      © Chevron — Internal Use Only<br>
-      Automated Estimation Tool
-    </div>
+  <div class="footer">
+    © CHEVRON — INTERNAL USE ONLY<br>
+    Optimized for Mobile Devices (Updated 2026)
   </div>
 </div>
 
 <script>
-  // ข้อมูล Preset
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP (Full Operations)", hours: 1, rate: 9.17, price: 6000 },
-    condy:     { label: "CONDY PACPP (Condensate)",     hours: 1, rate: 396,  price: 60 },
-    remote:    { label: "Gas Remote Platform (Offshore)", hours: 5, rate: 0.21, price: 6000 }
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, isRouth: false },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   isRouth: false },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, isRouth: false },
+    skl_palq:  { label: "Routh SKL-PALQ", rate: 38, price: 0.621, isRouth: true }
   };
 
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
-    
+    const mainInputLabel = document.getElementById('main-input-label');
+    const rateLabel = document.getElementById('rate-label');
+    const priceLabel = document.getElementById('price-label');
+    const badgeText = document.getElementById('badge-text');
+
     if (data) {
-      document.getElementById('val-h').value = data.hours;
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
-      document.getElementById('selected-type-display').innerText = "Selected: " + data.label;
+      document.getElementById('selected-label').innerText = "Selected: " + data.label;
+      
+      if (data.isRouth) {
+          mainInputLabel.innerText = "Distance (Mile)";
+          rateLabel.innerText = "Liter/Mile";
+          priceLabel.innerText = "$/Liter";
+          badgeText.innerText = "ROUND-TRIP COST";
+      } else {
+          mainInputLabel.innerText = "Hours";
+          rateLabel.innerText = "Rate: mmscf/hrs";
+          priceLabel.innerText = "$/mmscf";
+          badgeText.innerText = "SAVE COST";
+      }
+
     } else {
-      document.getElementById('selected-type-display').innerText = "No type selected";
+      document.getElementById('val-r').value = 0;
+      document.getElementById('val-p').value = 0;
+      document.getElementById('selected-label').innerText = "Please select media type above";
+      mainInputLabel.innerText = "Hours";
+      rateLabel.innerText = "Rate: mmscf/hrs";
+      priceLabel.innerText = "$/mmscf";
+      badgeText.innerText = "SAVE COST";
     }
-    calculate(); // คำนวณทันทีที่เลือก
+    calculate(); 
   }
 
   function calculate() {
+    const select = document.getElementById('type-select');
+    const selectedType = select.value;
     const h = parseFloat(document.getElementById('val-h').value) || 0;
     const r = parseFloat(document.getElementById('val-r').value) || 0;
     const p = parseFloat(document.getElementById('val-p').value) || 0;
     
-    const total = h * r * p;
+    let total = 0;
+    
+    if (selectedType && presets[selectedType].isRouth) {
+        total = h * r * p * 2; 
+    } else {
+        total = h * r * p;
+    }
     
     document.getElementById('grand-total').innerText = 
       '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
