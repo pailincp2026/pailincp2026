@@ -17,22 +17,25 @@
       padding: 0;
       display: flex;
       justify-content: center;
-      /* ส่วนที่แก้ไข: ใส่รูปพื้นหลัง offshore.jpg */
-      background-image: url('offshore.jpg'); 
+      min-height: 100vh;
+      /* แก้ไขเป็น .JPG ตามชื่อไฟล์จริงใน GitHub ของคุณ */
+      background-image: url('offshore.JPG'); 
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
       background-repeat: no-repeat;
-      background-color: #003c78; /* สีสำรองกรณีรูปไม่โหลด */
     }
 
     .calculator-card {
       width: 100%; 
       max-width: 500px;
-      min-height: 100vh; 
-      background: transparent; /* ไม่ใส่สีพื้นหลังขาวทับรูป */
+      /* เอฟเฟกต์ Glassmorphism แบบในรูปตัวอย่าง */
+      background: rgba(255, 255, 255, 0.1); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
     .hero {
@@ -43,7 +46,7 @@
       color: white;
       justify-content: space-between;
       border-bottom: 3px solid var(--accent-gold); 
-      background-color: rgba(0, 60, 120, 0.85); /* สีน้ำเงินเข้มโปร่งแสงเพื่อให้เห็นรูปหลังลางๆ */
+      background-color: rgba(0, 60, 120, 0.5); 
     }
     
     .logo {
@@ -56,7 +59,6 @@
 
     .content { 
         padding: 20px; 
-        background-color: transparent; 
         flex-grow: 1;
     }
 
@@ -71,26 +73,25 @@
       display: block;
       font-size: 0.75rem;
       font-weight: bold;
-      color: white; /* เปลี่ยนเป็นสีขาวเพื่อให้เด่นบนพื้นหลังน้ำทะเล */
+      color: white; 
       margin-bottom: 5px;
       text-transform: uppercase;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
     }
 
     select, input {
       width: 100%;
       padding: 12px;
-      border: 1px solid rgba(255,255,255,0.3); 
+      border: 1px solid rgba(255, 255, 255, 0.4); 
       border-radius: 8px; 
       font-size: 1rem;
       box-sizing: border-box;
-      background-color: rgba(255, 255, 255, 0.95); /* สีขาวเกือบสนิทเพื่อให้อ่านข้อมูลชัดเจน */
+      background: rgba(255, 255, 255, 0.9); 
       color: var(--primary-blue);
     }
 
     input[readonly] {
-      background-color: rgba(233, 236, 239, 0.9);
-      cursor: not-allowed;
+      background: rgba(233, 236, 239, 0.85);
       font-weight: bold;
     }
 
@@ -100,7 +101,7 @@
       border-radius: 15px;
       text-align: center;
       border: 1px solid var(--primary-blue);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
     }
 
     #selected-label {
@@ -121,11 +122,10 @@
       display: inline-block;
       background: var(--success-green);
       color: white;
-      padding: 8px 20px;
+      padding: 10px 25px;
       border-radius: 25px;
       font-size: 0.85rem;
       font-weight: bold;
-      letter-spacing: 1px;
       border: none;
       cursor: pointer;
     }
@@ -135,17 +135,15 @@
       padding: 20px;
       font-size: 0.7rem;
       color: white; 
-      background-color: rgba(0, 0, 0, 0.4); 
+      background-color: rgba(0, 0, 0, 0.2); 
     }
 
     @media (min-width: 501px) {
       .calculator-card {
-        margin-top: 30px;
-        margin-bottom: 30px;
+        margin: 30px 0;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255,255,255,0.1);
+        min-height: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
     }
   </style>
@@ -213,7 +211,6 @@
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
-
     if (data) {
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
