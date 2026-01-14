@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,11 +41,7 @@
       justify-content: space-between;
     }
     
-    .logo {
-        height: 60px; /* ปรับขนาดโลโก้ตามต้องการ */
-        margin-right: 15px;
-    }
-
+    .logo { height: 60px; margin-right: 15px; }
     .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
     .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
 
@@ -82,7 +78,6 @@
       border-radius: 10px;
       font-size: 1rem;
       box-sizing: border-box;
-      transition: all 0.3s;
     }
 
     input[readonly] {
@@ -132,19 +127,13 @@
       font-size: 0.7rem;
       color: #aaa;
     }
-
-    @media (max-width: 400px) {
-      .total-display { font-size: 2rem; }
-      .field-row { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
 
 <div class="calculator-card">
   <div class="hero">
-    <!-- Image Tag สำหรับโลโก้จากไฟล์ในเครื่อง -->
-    <img src="logo.png" alt="Company Logo" class="logo">
+    <img src="logo.png" alt="Logo" class="logo">
     <div class="hero-text">
       <h2>Benefit Calculator</h2>
       <p>Operational Cost Estimation (2026)</p>
@@ -154,105 +143,102 @@
   <div class="content">
     <div class="input-group">
       <div class="full-width">
-        <label>Media</label>
+        <label>Media / Category</label>
         <select id="type-select" onchange="applyPreset()">
-          <option value="">-- Tap to Select Media --</option>
-          <option value="gas_pacpp">Gas / PACPP</option>
-          <option value="condy">CONDY PACPP</option>
-          <option value="remote">Gas Remote Platform</option>
-          <option value="skl_palq">Routh SKL-PALQ</option>
+          <option value="">-- เลือกรายการ --</option>
+          <option value="gas_pacpp">Gas / PACPP ($6,000/mmscf)</option>
+          <option value="condy">CONDY PACPP ($60/bbl)</option>
+          <option value="remote">Gas Remote Platform ($6,000/mmscf)</option>
+          <option value="chopper">Chopper Traveling ($1,600/trip)</option>
+          <option value="crewboat">Crew Boat Travel ($270/hr)</option>
+          <option value="rig">Rig Operation ($200,000/day)</option>
         </select>
       </div>
 
       <div class="full-width">
-        <label id="main-input-label">Hours</label>
-        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+        <label id="main-input-label">Quantity / Hours</label>
+        <input type="number" id="val-h" placeholder="ระบุจำนวน..." oninput="calculate()">
       </div>
 
       <div class="field-row">
         <div>
-          <label id="rate-label">Rate: mmscf/hrs</label>
+          <label id="rate-label">Base Rate</label>
           <input type="number" id="val-r" readonly value="0">
         </div>
         <div>
-          <label id="price-label">$mmscf</label>
+          <label id="price-label">Price ($)</label>
           <input type="number" id="val-p" readonly value="0">
         </div>
       </div>
     </div>
 
     <div class="result-section">
-      <div id="selected-label">Please select media type above</div>
+      <div id="selected-label">โปรดเลือกรายการด้านบน</div>
       <div class="total-display" id="grand-total">$0.00</div>
-      <div class="save-cost-badge" id="badge-text">SAVE COST</div>
+      <div class="save-cost-badge" id="badge-text">BENEFIT SAVING</div>
     </div>
   </div>
 
   <div class="footer">
     © CHEVRON — INTERNAL USE ONLY<br>
-    Optimized for Mobile Devices (Updated 2026)
+    Updated for 2026 Assumptions
   </div>
 </div>
 
 <script>
+  // ข้อมูลตาม Assumption ที่กำหนดมา
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, isRouth: false },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   isRouth: false },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, isRouth: false },
-    skl_palq:  { label: "Routh SKL-PALQ", rate: 38, price: 0.621, isRouth: true }
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, unit: "Hours", badge: "LPO SAVING" },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   unit: "Hours", badge: "LPO SAVING" },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, unit: "Hours", badge: "LPO SAVING" },
+    chopper:   { label: "Chopper Travel", rate: 1, price: 1600, unit: "No. of People", badge: "COST SAVING" },
+    crewboat:  { label: "Crew Boat Travel", rate: 1, price: 270, unit: "Man-Hours", badge: "COST SAVING" },
+    rig:       { label: "Rig Cost Saving", rate: 1, price: 200000, unit: "Days (24hrs)", badge: "COST SAVING" }
   };
 
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
-    const mainInputLabel = document.getElementById('main-input-label');
-    const rateLabel = document.getElementById('rate-label');
-    const priceLabel = document.getElementById('price-label');
-    const badgeText = document.getElementById('badge-text');
-
+    
     if (data) {
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
-      document.getElementById('selected-label').innerText = "Selected: " + data.label;
-      
-      if (data.isRouth) {
-          mainInputLabel.innerText = "Distance (KG)";
-          rateLabel.innerText = "Liter/KG";
-          priceLabel.innerText = "$/Liter";
-          badgeText.innerText = "ROUND-TRIP COST";
-      } else {
-          mainInputLabel.innerText = "Hours";
-          rateLabel.innerText = "Rate: mmscf/hrs";
-          priceLabel.innerText = "$/mmscf";
-          badgeText.innerText = "SAVE COST";
-      }
+      document.getElementById('selected-label').innerText = "รายการ: " + data.label;
+      document.getElementById('main-input-label').innerText = data.unit;
+      document.getElementById('badge-text').innerText = data.badge;
 
+      // ปรับเปลี่ยน Label ตามประเภท
+      if(select.value.includes('gas') || select.value === 'remote') {
+          document.getElementById('rate-label').innerText = "mmscf/hrs";
+          document.getElementById('price-label').innerText = "$/mmscf";
+      } else if(select.value === 'condy') {
+          document.getElementById('rate-label').innerText = "bbl/hrs";
+          document.getElementById('price-label').innerText = "$/bbl";
+      } else {
+          document.getElementById('rate-label').innerText = "Multiplier";
+          document.getElementById('price-label').innerText = "Unit Price ($)";
+      }
     } else {
-      document.getElementById('val-r').value = 0;
-      document.getElementById('val-p').value = 0;
-      document.getElementById('selected-label').innerText = "Please select media type above";
-      mainInputLabel.innerText = "Hours";
-      rateLabel.innerText = "Rate: mmscf/hrs";
-      priceLabel.innerText = "$/mmscf";
-      badgeText.innerText = "SAVE COST";
+      resetFields();
     }
     calculate(); 
   }
 
+  function resetFields() {
+    document.getElementById('val-r').value = 0;
+    document.getElementById('val-p').value = 0;
+    document.getElementById('selected-label').innerText = "โปรดเลือกรายการด้านบน";
+    document.getElementById('main-input-label').innerText = "Quantity / Hours";
+    document.getElementById('badge-text').innerText = "BENEFIT SAVING";
+  }
+
   function calculate() {
-    const select = document.getElementById('type-select');
-    const selectedType = select.value;
     const h = parseFloat(document.getElementById('val-h').value) || 0;
     const r = parseFloat(document.getElementById('val-r').value) || 0;
     const p = parseFloat(document.getElementById('val-p').value) || 0;
     
-    let total = 0;
-    
-    if (selectedType && presets[selectedType].isRouth) {
-        total = h * r * p * 2; 
-    } else {
-        total = h * r * p;
-    }
+    // คำนวณแบบปกติ (Quantity * Rate * Price)
+    let total = h * r * p;
     
     document.getElementById('grand-total').innerText = 
       '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
