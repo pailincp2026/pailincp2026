@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Benefit Calculator 2026 - Clean View</title>
+  <title>Benefit Calculator 2026</title>
   <style>
     :root {
       --primary-blue: #002d5a;
@@ -44,14 +44,13 @@
       margin-bottom: 8px; text-transform: uppercase; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
     }
 
-    select {
+    select, input {
       width: 100%; padding: 14px; border: 1px solid rgba(255, 255, 255, 0.3); 
       border-radius: 12px; font-size: 1rem; box-sizing: border-box;
       background: rgba(255, 255, 255, 0.95); color: var(--primary-blue); margin-bottom: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
+    .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 5px; }
 
     .result-section {
       background: rgba(255, 255, 255, 0.95); padding: 30px 20px;
@@ -64,17 +63,14 @@
     .save-cost-badge {
       display: block; width: 100%; background: var(--success-green); color: white;
       padding: 15px; border-radius: 15px; font-weight: bold; border: none;
-      cursor: pointer; transition: transform 0.2s, background 0.2s;
     }
 
-    .save-cost-badge:active { transform: scale(0.98); background: #1e7e34; }
-
-    #route-summary { font-size: 1.1rem; letter-spacing: 0.5px; margin-bottom: 4px; }
+    #route-summary { font-size: 1.1rem; margin-bottom: 4px; }
     #distance-value { font-size: 0.85rem; font-weight: normal; opacity: 0.9; }
 
     .footer {
       text-align: center; padding: 20px 20px 40px 20px; font-size: 0.7rem; color: white; 
-      background-color: rgba(0, 0, 0, 0.4); text-shadow: 1px 1px 2px rgba(0,0,0,1);
+      background-color: rgba(0, 0, 0, 0.4);
     }
   </style>
 </head>
@@ -114,16 +110,19 @@
       </div>
     </div>
 
-    <input type="hidden" id="val-h" value="0">
-    <input type="hidden" id="val-r" value="0">
-    <input type="hidden" id="val-p" value="0">
-    <input type="hidden" id="val-f" value="1">
+    <label for="val-hours">Additional Hours</label>
+    <input type="number" id="val-hours" placeholder="0" oninput="calculate()" value="0">
+
+    <input type="hidden" id="val-dist" value="0">
+    <input type="hidden" id="val-rate" value="0">
+    <input type="hidden" id="val-price" value="0">
+    <input type="hidden" id="val-factor" value="1">
 
     <div class="result-section">
-      <div id="selected-label" style="font-weight: 600; color: #666; font-size: 0.9rem;">Estimation Total</div>
+      <div id="selected-label" style="font-weight: 600; color: #666; font-size: 0.9rem;">Total Cost Estimate</div>
       <div class="total-display" id="grand-total">$0.00</div>
       
-      <button class="save-cost-badge" onclick="alert('Cost Saved to Log')">
+      <button class="save-cost-badge">
         <div id="route-summary">PLEASE SELECT ROUTE</div>
         <div id="distance-value">0.00 Miles</div>
       </button>
@@ -131,22 +130,18 @@
   </div>
 
   <div class="footer">
-    © CHEVRON — INTERNAL USE ONLY<br>
-    DVE Sirasit CP-CO | Updated Jan 2026
+    © CHEVRON — INTERNAL USE ONLY | 2026
   </div>
 </div>
 
 <script>
-  // List of locations
   const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
 
-  // Matrix Data
   const distMatrix = {
-    "PALQ": {"PAWA":65.446,"PAWB":52.954,"PAWC":154.518,"PAWD":48.066,"PAWE":99.662,"PAWF":3.258,"PAWG":138.224,"PAWH":58.928,"PAWI":102.921,"PAWS":102.650},
+    "PALQ": {"PAWA":65.446,"PAWB":52.954,"PAWC":154.518,"PAWD":48.066,"PAWS":102.650},
     "PAWA": {"PALQ":65.446,"PAWB":88.257,"PAWD":93.416,"PAWS":105.365},
     "PAWB": {"PALQ":52.954,"PAWA":88.257,"PAWD":98.305,"PAWS":57.299},
-    "PAWD": {"PALQ":48.066,"PAWA":93.416,"PAWB":98.305,"PAWS":75.201} 
-    // เพิ่มข้อมูลพิกัดอื่นๆ ตรงนี้ตามโครงสร้างด้านบน
+    "PAWD": {"PALQ":48.066,"PAWA":93.416,"PAWB":98.305,"PAWS":75.201}
   };
 
   const presets = {
@@ -156,7 +151,6 @@
     skl_palq:  { label: "SKL-PALQ", rate: 3610, price: 0.621, factor: 2 }
   };
 
-  // Initialize Dropdowns
   const fromSel = document.getElementById('loc-from');
   const toSel = document.getElementById('loc-to');
   locations.forEach(loc => {
@@ -169,26 +163,18 @@
     const to = toSel.value;
     const routeDisplay = document.getElementById('route-summary');
     const distDisplay = document.getElementById('distance-value');
-    const hiddenDist = document.getElementById('val-h');
+    const hiddenDist = document.getElementById('val-dist');
 
     if (from && to) {
       if (from === to) {
         hiddenDist.value = 0;
         routeDisplay.innerText = from + " ➔ " + to;
-        distDisplay.innerText = "0.00 Miles (Same Location)";
+        distDisplay.innerText = "0.00 Miles";
       } else {
-        // Search symmetric matrix
         let dist = (distMatrix[from] && distMatrix[from][to]) || (distMatrix[to] && distMatrix[to][from]);
-        
-        if (dist) {
-          hiddenDist.value = dist;
-          routeDisplay.innerText = from + " ➔ " + to;
-          distDisplay.innerText = dist.toFixed(2) + " Miles";
-        } else {
-          hiddenDist.value = 0;
-          routeDisplay.innerText = "ROUTE NOT FOUND";
-          distDisplay.innerText = "Check Matrix Data";
-        }
+        hiddenDist.value = dist || 0;
+        routeDisplay.innerText = from + " ➔ " + to;
+        distDisplay.innerText = (dist ? dist.toFixed(2) : "0.00") + " Miles";
       }
       calculate();
     }
@@ -198,21 +184,26 @@
     const select = document.getElementById('type-select');
     const data = presets[select.value];
     if (data) {
-      document.getElementById('val-r').value = data.rate;
-      document.getElementById('val-p').value = data.price;
-      document.getElementById('val-f').value = data.factor; 
+      document.getElementById('val-rate').value = data.rate;
+      document.getElementById('val-price').value = data.price;
+      document.getElementById('val-factor').value = data.factor; 
       document.getElementById('selected-label').innerText = data.label;
       calculate();
     }
   }
 
   function calculate() {
-    const h = parseFloat(document.getElementById('val-h').value) || 0;
-    const r = parseFloat(document.getElementById('val-r').value) || 0;
-    const p = parseFloat(document.getElementById('val-p').value) || 0;
-    const f = parseFloat(document.getElementById('val-f').value) || 1;
+    const d = parseFloat(document.getElementById('val-dist').value) || 0;
+    const h = parseFloat(document.getElementById('val-hours').value) || 0;
+    const r = parseFloat(document.getElementById('val-rate').value) || 0;
+    const p = parseFloat(document.getElementById('val-price').value) || 0;
+    const f = parseFloat(document.getElementById('val-factor').value) || 1;
     
-    const total = h * r * p * f; 
+    // สูตรแบบแยกส่วน: ระยะทางคำนวณชุดหนึ่ง + ชั่วโมงคำนวณอีกชุดหนึ่ง
+    // (d * r * p * f) คือส่วนของเส้นทาง
+    // (h * r * p * f) คือส่วนของเวลาเพิ่มเติม
+    const total = (d * r * p * f) + (h * r * p * f); 
+    
     document.getElementById('grand-total').innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 </script>
