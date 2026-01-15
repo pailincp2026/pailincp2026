@@ -92,8 +92,10 @@
       <option value="gas_pacpp">Gas / PACPP</option>
       <option value="condy">CONDY PACPP</option>
       <option value="remote">Gas Remote Platform</option>
-      <option value="skl_palq">SKL-PALQ</option>
-    </select>
+      </select>
+
+    <label for="val-hours">Additional Hours</label>
+    <input type="number" id="val-hours" placeholder="0" oninput="calculate()" value="0">
 
     <div class="row-grid">
       <div>
@@ -109,9 +111,6 @@
         </select>
       </div>
     </div>
-
-    <label for="val-hours">Additional Hours</label>
-    <input type="number" id="val-hours" placeholder="0" oninput="calculate()" value="0">
 
     <input type="hidden" id="val-dist" value="0">
     <input type="hidden" id="val-rate" value="0">
@@ -135,21 +134,23 @@
 </div>
 
 <script>
-  const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
+  const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL", "SKL"];
 
   const distMatrix = {
-    "PALQ": {"PAWA":65.446,"PAWB":52.954,"PAWC":154.518,"PAWD":48.066,"PAWS":102.650},
-    "PAWA": {"PALQ":65.446,"PAWB":88.257,"PAWD":93.416,"PAWS":105.365},
-    "PAWB": {"PALQ":52.954,"PAWA":88.257,"PAWD":98.305,"PAWS":57.299},
-    "PAWD": {"PALQ":48.066,"PAWA":93.416,"PAWB":98.305,"PAWS":75.201}
+    "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65, "SKL": 1.0},
+    "PAWA": {"PALQ":65.44,"PAWD":93.41,"PAWS":105.36},
+    "PAWD": {"PALQ":48.06,"PAWA":93.41,"PAWS":75.20},
+    "SKL": {"PALQ": 1.0} 
   };
 
   const presets = {
     gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1 },
     condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1 },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1 },
-    skl_palq:  { label: "SKL-PALQ", rate: 3610, price: 0.621, factor: 2 }
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1 }
   };
+
+  // Preset พิเศษสำหรับ SKL-PALQ โดยเฉพาะ
+  const sklSpecial = { rate: 3610, price: 0.621, factor: 2 };
 
   const fromSel = document.getElementById('loc-from');
   const toSel = document.getElementById('loc-to');
@@ -166,44 +167,55 @@
     const hiddenDist = document.getElementById('val-dist');
 
     if (from && to) {
-      if (from === to) {
-        hiddenDist.value = 0;
-        routeDisplay.innerText = from + " ➔ " + to;
-        distDisplay.innerText = "0.00 Miles";
+      // เช็คเงื่อนไขพิเศษ: ถ้าเลือก SKL-PALQ ให้เปลี่ยน Rate/Price ทันที
+      if ((from === "SKL" && to === "PALQ") || (from === "PALQ" && to === "SKL")) {
+        document.getElementById('val-rate').value = sklSpecial.rate;
+        document.getElementById('val-price').value = sklSpecial.price;
+        document.getElementById('val-factor').value = sklSpecial.factor;
+        document.getElementById('selected-label').innerText = "SKL-PALQ Special Route";
       } else {
-        let dist = (distMatrix[from] && distMatrix[from][to]) || (distMatrix[to] && distMatrix[to][from]);
-        hiddenDist.value = dist || 0;
-        routeDisplay.innerText = from + " ➔ " + to;
-        distDisplay.innerText = (dist ? dist.toFixed(2) : "0.00") + " Miles";
+        // ถ้าไม่ใช่ SKL-PALQ ให้กลับไปใช้ค่าตาม Media Type ที่เลือกไว้
+        applyPreset(); 
       }
-      calculate();
+
+      let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
+      hiddenDist.value = dist;
+      routeDisplay.innerText = from + " ➔ " + to;
+      distDisplay.innerText = dist.toFixed(2) + " Miles";
     }
+    calculate();
   }
 
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
+    
     if (data) {
       document.getElementById('val-rate').value = data.rate;
       document.getElementById('val-price').value = data.price;
       document.getElementById('val-factor').value = data.factor; 
       document.getElementById('selected-label').innerText = data.label;
-      calculate();
     }
+    calculate();
   }
 
   function calculate() {
+    const from = document.getElementById('loc-from').value;
+    const to = document.getElementById('loc-to').value;
+    
+    // แสดง $0.00 จนกว่าจะเลือกสถานที่ครบ
+    if (!from || !to) {
+      document.getElementById('grand-total').innerText = '$0.00';
+      return;
+    }
+
     const d = parseFloat(document.getElementById('val-dist').value) || 0;
     const h = parseFloat(document.getElementById('val-hours').value) || 0;
     const r = parseFloat(document.getElementById('val-rate').value) || 0;
     const p = parseFloat(document.getElementById('val-price').value) || 0;
     const f = parseFloat(document.getElementById('val-factor').value) || 1;
     
-    // สูตรแบบแยกส่วน: ระยะทางคำนวณชุดหนึ่ง + ชั่วโมงคำนวณอีกชุดหนึ่ง
-    // (d * r * p * f) คือส่วนของเส้นทาง
-    // (h * r * p * f) คือส่วนของเวลาเพิ่มเติม
     const total = (d * r * p * f) + (h * r * p * f); 
-    
     document.getElementById('grand-total').innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 </script>
