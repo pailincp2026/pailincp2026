@@ -161,6 +161,8 @@
       <option value="gas_pacpp">Gas / PACPP</option>
       <option value="condy">CONDY PACPP</option>
       <option value="remote">Gas Remote Platform</option>
+      <!-- เพิ่มตัวเลือกใหม่สำหรับ SKL-PALQ -->
+      <option value="skl_palq">SKL-PALQ (95 Mile)</option>
     </select>
 
     <label>Hours</label>
@@ -176,6 +178,9 @@
         <input type="number" id="val-p" readonly value="0">
       </div>
     </div>
+    
+    <!-- เพิ่ม input สำหรับ Factor ใหม่ -->
+    <input type="hidden" id="val-f" value="1">
 
     <div class="result-section">
       <div id="selected-label" style="font-weight: 600; color: #555; font-size: 0.85rem;">Please select media type above</div>
@@ -191,10 +196,13 @@
 </div>
 
 <script>
+  // เพิ่ม factor เข้าไปใน presets object
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000 },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60 },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000 }
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1 },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1 },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1 },
+    // ใช้ 3610 เป็น Rate และ 0.621 เป็น Price และมี Factor เป็น 2
+    skl_palq:  { label: "SKL-PALQ (95 Mile)", rate: 3610, price: 0.621, factor: 2 }
   };
 
   function applyPreset() {
@@ -203,10 +211,14 @@
     if (data) {
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
+      // ตั้งค่า factor
+      document.getElementById('val-f').value = data.factor || 1; 
       document.getElementById('selected-label').innerText = "Selected: " + data.label;
     } else {
       document.getElementById('val-r').value = 0;
       document.getElementById('val-p').value = 0;
+      // ตั้งค่า factor เริ่มต้น
+      document.getElementById('val-f').value = 1; 
       document.getElementById('selected-label').innerText = "Please select media type above";
     }
     calculate(); 
@@ -216,7 +228,12 @@
     const h = parseFloat(document.getElementById('val-h').value) || 0;
     const r = parseFloat(document.getElementById('val-r').value) || 0;
     const p = parseFloat(document.getElementById('val-p').value) || 0;
-    const total = h * r * p;
+    // ดึงค่า factor มาใช้ในการคำนวณ
+    const f = parseFloat(document.getElementById('val-f').value) || 1;
+    
+    // อัปเดตสูตรเป็น h * r * p * f
+    const total = h * r * p * f; 
+
     document.getElementById('grand-total').innerText = 
       '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
