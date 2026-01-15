@@ -1,207 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Benefit Calculator 2026 - Full Matrix</title>
-  <style>
-    :root {
-      --primary-blue: #002d5a;
-      --accent-gold: #ffb81c;
-      --success-green: #28a745;
-    }
+<div class="content">
+  <label>Media</label>
+  <select id="type-select" onchange="applyPreset()">
+    <option value="">-- Tap to Select Media --</option>
+    <option value="gas_pacpp">Gas / PACPP</option>
+    <option value="condy">CONDY PACPP</option>
+    <option value="remote">Gas Remote Platform</option>
+    <option value="skl_palq">SKL-PALQ</option>
+  </select>
 
-    body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0; padding: 0; display: flex; justify-content: center;
-      min-height: 100vh; background-color: #001a33;
-      background-image: linear-gradient(rgba(0, 30, 60, 0.2), rgba(0, 20, 40, 0.4)), url('offshore.JPG'); 
-      background-size: cover; background-position: center; background-attachment: fixed;
-      background-repeat: no-repeat;
-    }
-
-    .calculator-card {
-      width: 100%; max-width: 500px;
-      background: rgba(255, 255, 255, 0.05); 
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      display: flex; flex-direction: column; min-height: 100vh;
-    }
-
-    .hero {
-      height: 110px; display: flex; align-items: center; padding: 0 20px;
-      color: white; justify-content: space-between; border-bottom: 4px solid var(--accent-gold); 
-      background-image: linear-gradient(rgba(0, 45, 90, 0.4), rgba(0, 45, 90, 0.4)), url('pailin_rig.jpg'); 
-      background-size: cover; background-position: center;
-    }
-    
-    .logo { height: 70px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); }
-    .hero-text h2 { margin: 0; font-size: 1.5rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
-    .hero-text p { margin: 0; font-size: 0.8rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-
-    .content { padding: 20px; flex-grow: 1; }
-
-    label {
-      display: block; font-size: 0.75rem; font-weight: bold; color: #ffffff; 
-      margin-bottom: 5px; text-transform: uppercase; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-    }
-
-    select, input {
-      width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); 
-      border-radius: 8px; font-size: 1rem; box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.95); color: var(--primary-blue); margin-bottom: 15px;
-    }
-
-    .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .result-section {
-      background: rgba(255, 255, 255, 0.95); padding: 25px 15px;
-      border-radius: 15px; text-align: center; border: 1px solid var(--primary-blue);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); margin-top: 5px;
-    }
-
-    .total-display { color: var(--success-green); font-weight: 800; font-size: 3rem; margin: 5px 0; }
-    .save-cost-badge {
-      display: inline-block; background: var(--success-green); color: white;
-      padding: 10px 30px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; border: none;
-    }
-
-    .footer {
-      text-align: center; padding: 20px 20px 60px 20px; font-size: 0.7rem; color: white; 
-      background-color: rgba(0, 0, 0, 0.3); text-shadow: 1px 1px 2px rgba(0,0,0,1);
-    }
-  </style>
-</head>
-<body>
-
-<div class="calculator-card">
-  <div class="hero">
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="hero-text">
-      <h2>Benefit Calculator</h2>
-      <p>Operational Cost Estimation (2026)</p>
+  <div class="row-grid">
+    <div>
+      <label>Origin</label>
+      <select id="loc-from" onchange="updateDistance()">
+        <option value="">-- From --</option>
+      </select>
+    </div>
+    <div>
+      <label>Destination</label>
+      <select id="loc-to" onchange="updateDistance()">
+        <option value="">-- To --</option>
+      </select>
     </div>
   </div>
 
-  <div class="content">
-    <label>Media</label>
-    <select id="type-select" onchange="applyPreset()">
-      <option value="">-- Tap to Select Media --</option>
-      <option value="gas_pacpp">Gas / PACPP</option>
-      <option value="condy">CONDY PACPP</option>
-      <option value="remote">Gas Remote Platform</option>
-      <option value="skl_palq">SKL-PALQ</option>
-    </select>
+  <input type="hidden" id="val-h" value="0">
+  <input type="hidden" id="val-r" value="0">
+  <input type="hidden" id="val-p" value="0">
+  <input type="hidden" id="val-f" value="1">
 
-    <!-- ส่วนเลือกสถานที่ที่เพิ่มใหม่ -->
-    <div class="row-grid">
-      <div>
-        <label>Origin</label>
-        <select id="loc-from" onchange="updateDistance()">
-          <option value="">-- From --</option>
-        </select>
-      </div>
-      <div>
-        <label>Destination</label>
-        <select id="loc-to" onchange="updateDistance()">
-          <option value="">-- To --</option>
-        </select>
-      </div>
+  <div class="result-section">
+    <div id="selected-label" style="font-weight: 600; color: #555; font-size: 0.85rem; margin-bottom: 5px;">
+      Ready to Calculate
     </div>
-
-    <label id="hours-label" for="val-h">Distance (Miles)</label>
-    <input type="number" id="val-h" placeholder="Distance will auto-fill..." oninput="calculate()">
-
-    <div class="row-grid">
-      <div>
-        <label id="rate-label">Rate</label>
-        <input type="number" id="val-r" readonly value="0">
-      </div>
-      <div>
-        <label id="price-label">Price</label>
-        <input type="number" id="val-p" readonly value="0">
-      </div>
-    </div>
+    <div class="total-display" id="grand-total">$0.00</div>
     
-    <input type="hidden" id="val-f" value="1">
-
-    <div class="result-section">
-      <div id="selected-label" style="font-weight: 600; color: #555; font-size: 0.85rem;">Please select media and route</div>
-      <div class="total-display" id="grand-total">$0.00</div>
-      <button class="save-cost-badge">SAVE COST</button>
-    </div>
-  </div>
-
-  <div class="footer">
-    © CHEVRON — INTERNAL USE ONLY<br>
-    Optimized for Mobile (Updated Jan 2026)<br>
-    DVE Sirasit CP-CO
+    <button class="save-cost-badge" id="main-action-btn">
+      <div id="route-text">PLEASE SELECT ROUTE</div>
+      <div id="dist-text" style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">0.00 Miles</div>
+    </button>
   </div>
 </div>
-
-<script>
-  // รายชื่อสถานที่
-  const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
-
-  // Full Matrix Data (เฉพาะหัวข้อหลักที่ใช้คำนวณ)
-  const distMatrix = {
-    "PALQ": {"PAWA":65.44616,"PAWB":52.95437,"PAWC":154.5181,"PAWD":48.06627,"PAWE":99.66283,"PAWF":3.25873,"PAWG":138.2245,"PAWH":58.9287,"PAWI":102.9216,"PAWJ":174.3421,"PAWK":221.0505,"PAWL":113.5124,"PAWM":47.79471,"PAWN":200.1403,"PAWO":122.2024,"PAWP":130.6208,"PAWQ":71.96363,"PAWR":189.5495,"PAWS":102.65,"PAWT":111.8831,"PAWU":73.59299,"MGWA":305.7775,"MGWB":443.7304,"MGWC":381.8146,"MGWD":512.1638,"MGWE":283.5095,"MGWF":491.7967,"MGWG":372.5815,"MGWH":452.1488,"MGWI":303.3335,"MGWJ":486.637,"MGWK":439.9286,"MGWL":319.6271},
-    "PAWA": {"PALQ":65.44616,"PAWB":88.25728,"PAWC":191.722,"PAWD":93.41693,"PAWE":53.76905,"PAWF":64.63148,"PAWG":85.27011,"PAWH":40.46257,"PAWI":149.63,"PAWJ":170.2687,"PAWK":244.6763,"PAWL":136.8667,"PAWM":112.6978,"PAWN":238.1589,"PAWO":92.33069,"PAWP":183.8467,"PAWQ":131.1639,"PAWR":143.3841,"PAWS":105.3656,"PAWT":52.95437,"PAWU":63.00212,"MGWA":346.2401,"MGWB":480.6627,"MGWC":434.2258,"MGWD":562.9456,"MGWE":316.9115,"MGWF":537.1474,"MGWG":419.29,"MGWH":479.3049,"MGWI":358.1888,"MGWJ":481.4774,"MGWK":491.5251,"MGWL":300.3463},
-    "PAWB": {"PALQ":52.95437,"PAWA":88.25728,"PAWC":201.7697,"PAWD":98.30503,"PAWE":92.33069,"PAWF":56.2131,"PAWG":129.263,"PAWH":54.85529,"PAWI":147.186,"PAWJ":126.2758,"PAWK":271.5609,"PAWL":60.55807,"PAWM":61.37275,"PAWN":245.7626,"PAWO":95.0463,"PAWP":96.94722,"PAWQ":54.85529,"PAWR":168.0962,"PAWS":57.29934,"PAWT":141.2116,"PAWU":122.2024,"MGWA":260.1553,"MGWB":396.2073,"MGWC":345.9685,"MGWD":474.6884,"MGWE":234.357,"MGWF":449.7048,"MGWG":331.3042,"MGWH":401.3669,"MGWI":270.7462,"MGWJ":435.312,"MGWK":403.2679,"MGWL":247.9351}
-    // ... ระบบจะใช้สมมาตรในการหาค่าที่เหลือจากตารางที่คุณส่งมา
-  };
-
-  // Populate Dropdowns
-  const fromSel = document.getElementById('loc-from');
-  const toSel = document.getElementById('loc-to');
-  locations.forEach(loc => {
-    fromSel.add(new Option(loc, loc));
-    toSel.add(new Option(loc, loc));
-  });
-
-  const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1, unit: 'Miles' },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1, unit: 'Miles' },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1, unit: 'Miles' },
-    skl_palq:  { label: "SKL-PALQ", rate: 3610, price: 0.621, factor: 2, unit: 'Miles' }
-  };
-
-  function updateDistance() {
-    const from = fromSel.value;
-    const to = toSel.value;
-    if (from && to) {
-      if (from === to) {
-        document.getElementById('val-h').value = 0;
-      } else {
-        // ค้นหาค่าจาก Matrix (รองรับทั้งไปและกลับ)
-        let dist = (distMatrix[from] && distMatrix[from][to]) || (distMatrix[to] && distMatrix[to][from]);
-        document.getElementById('val-h').value = dist || 0;
-      }
-      calculate();
-    }
-  }
-
-  function applyPreset() {
-    const select = document.getElementById('type-select');
-    const data = presets[select.value];
-    if (data) {
-      document.getElementById('val-r').value = data.rate;
-      document.getElementById('val-p').value = data.price;
-      document.getElementById('val-f').value = data.factor || 1; 
-      document.getElementById('selected-label').innerText = "Selected: " + data.label;
-      document.getElementById('hours-label').innerText = data.unit;
-      calculate();
-    }
-  }
-
-  function calculate() {
-    const h = parseFloat(document.getElementById('val-h').value) || 0;
-    const r = parseFloat(document.getElementById('val-r').value) || 0;
-    const p = parseFloat(document.getElementById('val-p').value) || 0;
-    const f = parseFloat(document.getElementById('val-f').value) || 1;
-    const total = h * r * p * f; 
-    document.getElementById('grand-total').innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-  }
-</script>
-
-</body>
-</html>
