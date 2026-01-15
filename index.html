@@ -170,11 +170,13 @@
 
     <div class="row-grid">
       <div>
-        <label>Rate: mmscf/hrs</label>
+        <!-- เพิ่ม ID สำหรับ Label Rate -->
+        <label id="rate-label">Rate: mmscf/hrs</label>
         <input type="number" id="val-r" readonly value="0">
       </div>
       <div>
-        <label>$mmscf</label>
+        <!-- เพิ่ม ID สำหรับ Label Price -->
+        <label id="price-label">$mmscf</label>
         <input type="number" id="val-p" readonly value="0">
       </div>
     </div>
@@ -207,20 +209,36 @@
   function applyPreset() {
     const select = document.getElementById('type-select');
     const data = presets[select.value];
-    const hoursLabel = document.getElementById('hours-label'); // เลือก label element
+    const hoursLabel = document.getElementById('hours-label'); // เลือก label element 'Hours'
+    const rateLabel = document.getElementById('rate-label');   // เลือก label element 'Rate'
+    const priceLabel = document.getElementById('price-label'); // เลือก label element 'Price'
     
     if (data) {
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
       document.getElementById('val-f').value = data.factor || 1; 
       document.getElementById('selected-label').innerText = "Selected: " + data.label;
-      hoursLabel.innerText = data.unit; // เปลี่ยนข้อความ label ตามหน่วย
+      hoursLabel.innerText = data.unit; // เปลี่ยนข้อความ label ตามหน่วยหลัก
+
+      // **เงื่อนไขพิเศษสำหรับ SKL-PALQ**
+      if (select.value === 'skl_palq') {
+        rateLabel.innerText = "Liter";
+        priceLabel.innerText = "$/Liter"; 
+      } else {
+        // คืนค่ากลับเป็นหน่วยปกติสำหรับ Media อื่นๆ
+        rateLabel.innerText = "Rate: mmscf/hrs";
+        priceLabel.innerText = "$mmscf";
+      }
+
     } else {
+      // สถานะเริ่มต้น (ไม่ได้เลือก)
       document.getElementById('val-r').value = 0;
       document.getElementById('val-p').value = 0;
       document.getElementById('val-f').value = 1; 
       document.getElementById('selected-label').innerText = "Please select media type above";
-      hoursLabel.innerText = 'Hours'; // เปลี่ยนกลับเป็น Hours หากไม่ได้เลือก
+      hoursLabel.innerText = 'Hours';
+      rateLabel.innerText = "Rate: mmscf/hrs";
+      priceLabel.innerText = "$mmscf";
     }
     calculate(); 
   }
