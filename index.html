@@ -88,11 +88,6 @@
       margin-bottom: 15px;
     }
 
-    /* ซ่อนช่องระยะทางเริ่มต้น */
-    #distance-label, #val-dist {
-        display: none;
-    }
-
     /* จัดเรียง 2 แถวเหมือนเดิมตามรูป */
     .row-grid {
       display: grid;
@@ -173,10 +168,6 @@
     <label id="hours-label" for="val-h">Hours</label>
     <input type="number" id="val-h" placeholder="Enter ..." oninput="calculate()">
 
-    <!-- เพิ่มช่องแสดงระยะทาง KM (ซ่อนไว้ก่อน) -->
-    <label id="distance-label" for="val-dist">Distance (KM)</label>
-    <input type="number" id="val-dist" readonly value="0">
-
     <div class="row-grid">
       <div>
         <!-- เพิ่ม ID สำหรับ Label Rate -->
@@ -207,12 +198,12 @@
 </div>
 
 <script>
-  // เพิ่ม 'unit' และ 'miles' property เข้าไปใน presets object
+  // เพิ่ม 'unit' property เข้าไปใน presets object
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1, unit: 'Hours', miles: 0 },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1, unit: 'Hours', miles: 0 },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1, unit: 'Hours', miles: 0 },
-    skl_palq:  { label: "SKL-PALQ", rate: 3610, price: 0.621, factor: 2, unit: 'KG', miles: 95 }
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1, unit: 'Hours' },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1, unit: 'Hours' },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1, unit: 'Hours' },
+    skl_palq:  { label: "SKL-PALQ", rate: 3610, price: 0.621, factor: 2, unit: 'KG' }
   };
 
   function applyPreset() {
@@ -229,16 +220,14 @@
       document.getElementById('selected-label').innerText = "Selected: " + data.label;
       hoursLabel.innerText = data.unit; // เปลี่ยนข้อความ label ตามหน่วยหลัก
 
-      // **เงื่อนไขพิเศษสำหรับ SKL-PALQ และการแปลงระยะทาง**
+      // **เงื่อนไขพิเศษสำหรับ SKL-PALQ**
       if (select.value === 'skl_palq') {
         rateLabel.innerText = "Liter";
         priceLabel.innerText = "$/Liter"; 
-        updateDistanceDisplay(data.miles); // แสดงระยะทาง
       } else {
-        // คืนค่ากลับเป็นหน่วยปกติสำหรับ Media อื่นๆ และซ่อนระยะทาง
+        // คืนค่ากลับเป็นหน่วยปกติสำหรับ Media อื่นๆ
         rateLabel.innerText = "Rate: mmscf/hrs";
         priceLabel.innerText = "$mmscf";
-        updateDistanceDisplay(0); // ซ่อนระยะทาง
       }
 
     } else {
@@ -250,24 +239,8 @@
       hoursLabel.innerText = 'Hours';
       rateLabel.innerText = "Rate: mmscf/hrs";
       priceLabel.innerText = "$mmscf";
-      updateDistanceDisplay(0); // ซ่อนระยะทาง
     }
     calculate(); 
-  }
-
-  // ฟังก์ชันใหม่สำหรับจัดการการแสดงผลระยะทาง
-  function updateDistanceDisplay(miles) {
-    const km = miles * 1.609344;
-    document.getElementById('val-dist').value = km.toFixed(2); // แสดงผลทศนิยม 2 ตำแหน่ง
-    const distLabel = document.getElementById('distance-label');
-    const distInput = document.getElementById('val-dist');
-    if (miles > 0) {
-        distLabel.style.display = 'block'; // แสดง label
-        distInput.style.display = 'block'; // แสดง input
-    } else {
-        distLabel.style.display = 'none'; // ซ่อน label
-        distInput.style.display = 'none'; // ซ่อน input
-    }
   }
 
   function calculate() {
@@ -285,3 +258,4 @@
 
 </body>
 </html>
+
