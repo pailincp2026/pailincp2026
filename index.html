@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Benefit Calculator 2026 - Transparent</title>
+  <title>Benefit Calculator 2026</title>
   <style>
     :root {
       --primary-blue: #002d5a;
@@ -15,26 +15,26 @@
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin: 0; padding: 0; display: flex; justify-content: center;
       min-height: 100vh; 
-      /* พื้นหลังหลักของหน้าจอ */
       background-image: url('offshore.JPG'); 
       background-size: cover; 
       background-position: center; 
       background-attachment: fixed;
-      background-repeat: no-repeat;
     }
 
     .calculator-card {
       width: 100%; max-width: 500px;
-      /* ปรับให้โปร่งใส 100% */
       background: transparent; 
       display: flex; flex-direction: column; min-height: 100vh;
     }
 
+    /* แถบบนที่มีรูป Pailin Rig */
     .hero {
       height: 110px; display: flex; align-items: center; padding: 0 20px;
       color: white; justify-content: space-between; 
       border-bottom: 4px solid var(--accent-gold); 
-      background: rgba(0, 45, 90, 0.3); /* ใส่สีจางๆ เฉพาะหัวข้อเพื่อให้โลโก้เด่น */
+      background-image: linear-gradient(rgba(0, 45, 90, 0.4), rgba(0, 45, 90, 0.4)), url('pailin_rig.jpg'); 
+      background-size: cover; 
+      background-position: center;
     }
     
     .logo { height: 70px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8)); }
@@ -46,13 +46,13 @@
     label {
       display: block; font-size: 0.75rem; font-weight: bold; color: #ffffff; 
       margin-bottom: 8px; text-transform: uppercase; 
-      text-shadow: 2px 2px 4px rgba(0,0,0,1); /* เงาเข้มเพื่อให้เห็นตัวหนังสือบนรูปภาพ */
+      text-shadow: 2px 2px 4px rgba(0,0,0,1);
     }
 
     select, input {
       width: 100%; padding: 14px; border: 2px solid rgba(255, 255, 255, 0.5); 
       border-radius: 12px; font-size: 1rem; box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.9); /* ให้ช่องกรอกขาวจางๆ เพื่อให้พิมพ์ง่าย */
+      background: rgba(255, 255, 255, 0.9);
       color: var(--primary-blue); margin-bottom: 20px;
       font-weight: bold;
     }
@@ -60,29 +60,39 @@
     .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 5px; }
 
     .result-section {
-      /* ส่วนแสดงผลโปร่งใส แต่มีขอบขาวจางๆ ให้ดูเป็นสัดส่วน */
       background: rgba(255, 255, 255, 0.15); 
       padding: 30px 20px;
       border-radius: 20px; text-align: center; 
       border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(2px); /* เบลอเล็กน้อยเฉพาะส่วนแสดงผลเพื่อให้ตัวเลขเด่น */
+      backdrop-filter: blur(2px);
       margin-top: 10px;
     }
 
     .total-display { 
-      color: #00ff44; /* สีเขียวสว่างเพื่อให้ตัดกับรูปพื้นหลัง */
-      font-weight: 800; font-size: 3.5rem; margin: 10px 0; 
+      color: #00ff44; 
+      font-weight: 800; 
+      font-size: 2.8rem; 
+      margin: 10px 0; 
       text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+      min-height: 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     
     .save-cost-badge {
       display: block; width: 100%; background: var(--success-green); color: white;
       padding: 15px; border-radius: 15px; font-weight: bold; border: none;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      font-size: 1.4rem; letter-spacing: 2px;
     }
 
-    #route-summary { font-size: 1.1rem; margin-bottom: 4px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-    #distance-value { font-size: 0.85rem; font-weight: normal; }
+    #selected-label { 
+      font-weight: bold; color: #ffffff; font-size: 1rem; 
+      text-shadow: 1px 1px 5px #000;
+    }
+    #distance-value { font-size: 0.9rem; color: white; margin-top: 10px; text-shadow: 1px 1px 3px #000; }
 
     .footer {
       text-align: center; padding: 20px 20px 40px 20px; font-size: 0.7rem; color: white; 
@@ -134,13 +144,13 @@
     <input type="hidden" id="val-factor" value="1">
 
     <div class="result-section">
-      <div id="selected-label" style="font-weight: bold; color: #ffffff; font-size: 1rem; text-shadow: 1px 1px 3px #000;">Total Cost Estimate</div>
+      <div id="selected-label">COST ESTIMATE</div>
+      
       <div class="total-display" id="grand-total">$0.00</div>
       
-      <button class="save-cost-badge">
-        <div id="route-summary">PLEASE SELECT ROUTE</div>
-        <div id="distance-value">0.00 Miles</div>
-      </button>
+      <button class="save-cost-badge">SAVE COST</button>
+      
+      <div id="distance-value">0.00 Miles</div>
     </div>
   </div>
 
@@ -153,16 +163,15 @@
   const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
 
   const distMatrix = {
-    "PALQ": {"PAWA":65.44616,"PAWB":52.95437,"PAWC":154.5181,"PAWD":48.06627,"PAWS":102.65},
-    "PAWA": {"PALQ":65.44616,"PAWB":88.25728,"PAWD":93.41693,"PAWS":105.3656},
-    "PAWB": {"PALQ":52.95437,"PAWA":88.25728,"PAWD":98.30503,"PAWS":57.29934},
-    "PAWD": {"PALQ":48.06627,"PAWA":93.41693,"PAWB":98.30503,"PAWS":75.201}
+    "PALQ": {"PAWA":65.44616,"PAWB":52.95437,"PAWD":48.06627,"PAWS":102.65},
+    "PAWA": {"PALQ":65.44616,"PAWB":88.25728},
+    "PAWB": {"PALQ":52.95437,"PAWA":88.25728}
   };
 
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000, factor: 1 },
-    condy:     { label: "CONDY PACPP", rate: 396,  price: 60,   factor: 1 },
-    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000, factor: 1 }
+    gas_pacpp: { rate: 9.17, price: 6000, factor: 1 },
+    condy:     { rate: 396,  price: 60,   factor: 1 },
+    remote:    { rate: 0.21, price: 6000, factor: 1 }
   };
 
   const fromSel = document.getElementById('loc-from');
@@ -175,18 +184,15 @@
   function updateDistance() {
     const from = fromSel.value;
     const to = toSel.value;
-    const routeDisplay = document.getElementById('route-summary');
     const distDisplay = document.getElementById('distance-value');
     const hiddenDist = document.getElementById('val-dist');
 
     if (from && to) {
       let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
       hiddenDist.value = dist;
-      routeDisplay.innerText = from + " ➔ " + to;
       distDisplay.innerText = dist.toFixed(2) + " Miles";
     } else {
       hiddenDist.value = 0;
-      routeDisplay.innerText = "PLEASE SELECT ROUTE";
       distDisplay.innerText = "0.00 Miles";
     }
     calculate();
@@ -199,21 +205,26 @@
       document.getElementById('val-rate').value = data.rate;
       document.getElementById('val-price').value = data.price;
       document.getElementById('val-factor').value = data.factor; 
-      document.getElementById('selected-label').innerText = data.label;
-    } else {
-      document.getElementById('val-rate').value = 0;
-      document.getElementById('selected-label').innerText = "Total Cost Estimate";
     }
     calculate();
   }
 
   function calculate() {
-    const mediaSelected = document.getElementById('type-select').value;
     const from = document.getElementById('loc-from').value;
     const to = document.getElementById('loc-to').value;
-    
-    if (!mediaSelected || !from || !to) {
-      document.getElementById('grand-total').innerText = '$0.00';
+    const media = document.getElementById('type-select').value;
+    const display = document.getElementById('grand-total');
+
+    // ถ้าเลือก PALQ และ PAWB ให้โชว์ "PALQ ➔ PAWB" ในช่องตัวเลขสีเขียว
+    if ((from === "PALQ" && to === "PAWB") || (from === "PAWB" && to === "PALQ")) {
+      display.innerText = from + ' ➔ ' + to;
+      display.style.fontSize = "2.2rem";
+      return;
+    }
+
+    if (!media || !from || !to) {
+      display.innerText = '$0.00';
+      display.style.fontSize = "3.2rem";
       return;
     }
 
@@ -224,7 +235,8 @@
     const f = parseFloat(document.getElementById('val-factor').value) || 1;
     
     const total = (d * r * p * f) + (h * r * p * f); 
-    document.getElementById('grand-total').innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    display.innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    display.style.fontSize = "3.2rem";
   }
 </script>
 
