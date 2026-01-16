@@ -14,43 +14,59 @@
 
     body {
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0; padding: 0; display: flex; justify-content: center;
+      margin: 0; padding: 0;
       min-height: 100vh;
+      /* ปรับพื้นหลังให้เหมาะสมกับทุกหน้าจอ */
       background: #001a33 url('offshore.JPG') no-repeat center center fixed;
       background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .calculator-card {
-      width: 100%; max-width: 480px;
-      display: flex; flex-direction: column;
-      padding: 20px;
-    }
-
-    /* แถบบน: ใส่ภาพ pailin_rig.jpg ตามชื่อไฟล์ใน GitHub */
-    .hero {
-      height: 120px; display: flex; align-items: center; padding: 0 25px;
-      color: white; justify-content: space-between; 
-      border-bottom: 4px solid var(--accent-gold); 
-      background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('pailin_rig.jpg');
+    /* แถบบนยาวเต็มหน้าเว็บ */
+    .hero-wrapper {
+      width: 100%;
+      background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('pailin_rig.jpg');
       background-size: cover;
       background-position: center;
-      border-radius: 20px 20px 0 0;
-      position: relative;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      border-bottom: 4px solid var(--accent-gold);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 1200px; /* จำกัดความกว้างเนื้อหาในแถบบน */
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
     
-    .logo { height: 65px; z-index: 2; filter: drop-shadow(2px 2px 10px rgba(0,0,0,0.8)); }
-    .hero-text { z-index: 2; text-align: right; }
-    .hero-text h2 { margin: 0; font-size: 1.5rem; text-shadow: 2px 2px 8px #000; }
+    .logo { height: 60px; filter: drop-shadow(2px 2px 10px rgba(0,0,0,0.8)); }
+    .hero-text { text-align: right; color: white; }
+    .hero-text h2 { margin: 0; font-size: 1.4rem; text-shadow: 2px 2px 8px #000; }
     .hero-text p { margin: 0; font-size: 0.8rem; color: var(--accent-gold); text-shadow: 1px 1px 4px #000; }
 
-    /* ส่วนกลาง: โปร่งใส 100% */
+    /* ตัวการ์ดเครื่องคิดเลข */
+    .calculator-card {
+      width: 95%;
+      max-width: 500px;
+      margin: 30px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
     .content { 
       padding: 30px 25px; 
-      background: transparent; 
+      background: transparent; /* โปร่งใส 100% */
       border: 1px solid var(--glass-border);
-      border-top: none;
-      border-radius: 0 0 20px 20px;
+      border-radius: 20px;
+      box-sizing: border-box;
     }
 
     label {
@@ -69,12 +85,11 @@
 
     .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-    /* แก้ไข: ส่วนแสดงผลลัพธ์ให้โปร่งใส 100% ไม่เข้ม */
     .result-section {
-      background: transparent; /* เปลี่ยนจาก rgba(0,0,0,0.7) เป็นโปร่งใส */
+      background: transparent; 
       padding: 20px;
       border-radius: 20px; text-align: center; 
-      border: 1px solid var(--glass-border); /* ยังคงเส้นขอบไว้เพื่อให้ดูเป็นสัดส่วน */
+      border: 1px solid var(--glass-border);
       margin-top: 10px;
     }
 
@@ -82,7 +97,7 @@
       color: var(--success-green); 
       font-weight: 800; font-size: 3.5rem; 
       margin: 10px 0; 
-      text-shadow: 0 0 20px rgba(0, 255, 136, 1), 2px 2px 10px #000; /* เพิ่มเงาดำหลังตัวเลขให้อ่านง่ายขึ้น */
+      text-shadow: 0 0 20px rgba(0, 255, 136, 1), 2px 2px 10px #000;
     }
     
     .save-btn {
@@ -93,22 +108,32 @@
     }
 
     .footer {
-      text-align: center; padding: 25px; font-size: 0.75rem; color: #ffffff; 
+      text-align: center; padding: 20px; font-size: 0.75rem; color: #ffffff; 
       text-shadow: 1px 1px 4px #000;
+    }
+
+    /* ปรับแต่งสำหรับมือถือ */
+    @media (max-width: 600px) {
+      .hero-content { height: 80px; }
+      .logo { height: 45px; }
+      .hero-text h2 { font-size: 1.1rem; }
+      .total-display { font-size: 2.8rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="calculator-card">
-  <div class="hero">
+<div class="hero-wrapper">
+  <div class="hero-content">
     <img src="logo.png" alt="Logo" class="logo">
     <div class="hero-text">
       <h2>Benefit Calculator</h2>
       <p>Operational Cost Estimation</p>
     </div>
   </div>
+</div>
 
+<div class="calculator-card">
   <div class="content">
     <label>Media Type Selection</label>
     <select id="type-select" onchange="calculate()">
@@ -149,7 +174,6 @@
 </div>
 
 <script>
-  // ข้อมูลเดิมตาม GitHub ของคุณ
   const locations = ["PALQ", "PAWA", "PAWB", "PAWD", "PAWS", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
   const distMatrix = { "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65} };
   const presets = { gas_pacpp: { rate: 9.17, price: 6000 }, condy: { rate: 396, price: 60 }, remote: { rate: 0.21, price: 6000 } };
