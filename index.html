@@ -18,7 +18,6 @@
       font-family: 'Inter', sans-serif;
       margin: 0; padding: 0;
       min-height: 100vh;
-      /* พื้นหลังหลักของหน้าจอ */
       background: #001a33 url('offshore.JPG') no-repeat center center fixed;
       background-size: cover;
       display: flex;
@@ -27,7 +26,6 @@
       color: var(--white);
     }
 
-    /* แถบบน (Header) ยาวเต็มความกว้าง */
     .hero-wrapper {
       width: 100%;
       background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('pailin_rig.jpg');
@@ -55,7 +53,6 @@
     .hero-text h2 { margin: 0; font-size: 1.5rem; text-shadow: 2px 2px 10px #000; letter-spacing: 0.5px; }
     .hero-text p { margin: 0; font-size: 0.85rem; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; text-shadow: 1px 1px 5px #000; }
 
-    /* โครงสร้างตัวเครื่องคิดเลข */
     .calculator-card {
       width: 92%;
       max-width: 480px;
@@ -63,14 +60,12 @@
       box-sizing: border-box;
     }
 
-    /* สไตล์ของข้อความกำกับ (Label) */
     label {
       display: block; font-size: 0.75rem; font-weight: 800; color: var(--white); 
       margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.5px;
       text-shadow: 0 2px 6px rgba(0,0,0,1);
     }
 
-    /* สไตล์ช่องกรอกข้อมูล (Inputs) */
     select, input {
       width: 100%; padding: 15px 20px; 
       border: 1px solid var(--glass-border); 
@@ -79,13 +74,10 @@
       color: var(--primary-blue); margin-bottom: 25px;
       font-weight: 700; outline: none;
       box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
     }
-    select:focus, input:focus { border-color: var(--accent-gold); }
 
     .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-    /* ป้ายแจ้งเตือน Round Trip */
     .info-badge {
       text-align: center;
       background: rgba(0, 0, 0, 0.5);
@@ -96,7 +88,6 @@
       text-transform: uppercase;
     }
 
-    /* ส่วนแสดงผลลัพธ์ */
     .result-section { text-align: center; }
 
     .total-label { 
@@ -117,22 +108,13 @@
       padding: 20px; border-radius: 16px; font-weight: 800; border: none;
       font-size: 1.5rem; cursor: pointer;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      text-transform: uppercase; transition: 0.2s ease;
+      text-transform: uppercase;
     }
-    .save-btn:active { transform: scale(0.97); }
 
     .footer {
       text-align: center; padding: 40px 20px; font-size: 0.75rem; 
       color: rgba(255,255,255,0.7); font-weight: 600;
       text-shadow: 1px 1px 4px #000;
-    }
-
-    /* ปรับจูนสำหรับหน้าจอโทรศัพท์ */
-    @media (max-width: 600px) {
-      .hero-content { height: 85px; padding: 0 20px; }
-      .logo { height: 48px; }
-      .hero-text h2 { font-size: 1.2rem; }
-      .total-display { font-size: 3.5rem; }
     }
   </style>
 </head>
@@ -151,7 +133,7 @@
 <div class="calculator-card">
   
   <label>Media Type Selection</label>
-  <select id="type-select" onchange="calculate()">
+  <select id="type-select" onchange="handleMediaChange()">
     <option value="">-- Tap to Select Media --</option>
     <option value="gas_pacpp">Gas / PACPP</option>
     <option value="condy">CONDY PACPP</option>
@@ -164,13 +146,13 @@
   <div class="row-grid">
     <div>
       <label>Origin</label>
-      <select id="loc-from" onchange="updateDistance()">
+      <select id="loc-from" onchange="handleLocationChange()">
         <option value="">From</option>
       </select>
     </div>
     <div>
       <label>Destination</label>
-      <select id="loc-to" onchange="updateDistance()">
+      <select id="loc-to" onchange="handleLocationChange()">
         <option value="">To</option>
       </select>
     </div>
@@ -181,7 +163,7 @@
   </div>
 
   <div class="result-section">
-    <div class="total-label">ESTIMATED TOTAL BENEFIT</div>
+    <div class="total-label" id="result-label">ESTIMATED TOTAL BENEFIT</div>
     <div class="total-display" id="main-output">$0.00</div>
     <button class="save-btn">Save Estimate</button>
   </div>
@@ -192,13 +174,8 @@
 </div>
 
 <script>
-  // รายการ Location ทั้งหมด
   const locations = ["PALQ", "PAWA", "PAWB", "PAWD", "PAWS", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
-  
-  // ตารางระยะทางพื้นฐาน (Miles)
   const distMatrix = { "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65} };
-  
-  // ค่าตัวแปร presets
   const presets = { 
     gas_pacpp: { rate: 9.17, price: 6000 }, 
     condy: { rate: 396, price: 60 }, 
@@ -210,36 +187,53 @@
   const typeSel = document.getElementById('type-select');
   const hoursInput = document.getElementById('val-hours');
   const mainOutput = document.getElementById('main-output');
+  const resultLabel = document.getElementById('result-label');
 
-  // ใส่ข้อมูลใน Dropdown
   locations.forEach(loc => {
     fromSel.add(new Option(loc, loc));
     toSel.add(new Option(loc, loc));
   });
 
+  // เมื่อเลือก Media Type ให้รีเซ็ต Location
+  function handleMediaChange() {
+    if (typeSel.value !== "") {
+      fromSel.value = "";
+      toSel.value = "";
+    }
+    calculate();
+  }
+
+  // เมื่อเลือก Location ให้รีเซ็ต Media Type
+  function handleLocationChange() {
+    if (fromSel.value !== "" || toSel.value !== "") {
+      typeSel.value = "";
+    }
+    updateDistance();
+  }
+
   function updateDistance() {
     const from = fromSel.value; 
     const to = toSel.value;
+    resultLabel.innerText = "ESTIMATED DISTANCE";
 
-    if (from && to && !typeSel.value) {
+    if (from && to) {
       let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
-      // คูณสองอัตโนมัติ (Round Trip)
       let finalDist = dist * 2;
-      mainOutput.innerText = finalDist.toFixed(2) + " Miles (RT)";
+      mainOutput.innerText = finalDist.toFixed(2) + " Mi";
+    } else {
+      mainOutput.innerText = "0.00 Mi";
     }
-    if (typeSel.value) calculate();
   }
 
   function calculate() {
     const mediaKey = typeSel.value;
     const hoursVal = parseFloat(hoursInput.value) || 0;
+    resultLabel.innerText = "ESTIMATED TOTAL BENEFIT";
     
     if (mediaKey && hoursVal > 0) {
       const { rate, price } = presets[mediaKey];
       const total = hoursVal * rate * price;
       mainOutput.innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    } else if (!typeSel.value && fromSel.value && toSel.value) {
-      updateDistance();
     } else {
       mainOutput.innerText = '$0.00';
     }
