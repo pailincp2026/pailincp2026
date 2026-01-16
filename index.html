@@ -19,7 +19,7 @@
       font-family: 'Inter', sans-serif;
       margin: 0; padding: 0;
       min-height: 100vh;
-      /* ใส่สีพื้นหลังสำรองหากโหลดรูปไม่ขึ้น */
+  
       background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('pailin.jpg') no-repeat center center fixed;
       background-size: cover;
       display: flex;
@@ -52,7 +52,7 @@
 
     .calculator-card {
       width: 95%;
-      max-width: 600px; /* คุมขนาดบน Desktop */
+      max-width: 600px;
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -88,7 +88,7 @@
 
     .total-label { font-size: 0.8rem; font-weight: 600; opacity: 0.8; margin-bottom: 5px; }
     
-    /* สีผลลัพธ์หลัก */
+   
     .total-display { 
       color: var(--success-green); font-weight: 800; 
       font-size: clamp(2rem, 10vw, 3.5rem);
@@ -118,10 +118,10 @@
     }
     .route-item:last-child { margin-bottom: 0; border-bottom: none; }
 
-    /* ปรับสีตัวเลขผลลัพธ์ให้เป็นสีเดียวกันทั้งหมด */
+    
     .route-item span:last-child { 
       font-size: 1.3rem; font-weight: 800; 
-      color: var(--success-green); /* เปลี่ยนเป็นสีเขียวเหมือนกัน */
+      color: var(--success-green);
     }
 
     .footer {
@@ -130,7 +130,7 @@
       line-height: 1.6; width: 100%;
     }
 
-    /* ปรับแต่งสำหรับหน้าจอ Desktop */
+   
     @media (min-width: 768px) {
       body { justify-content: center; }
       .calculator-card { margin-top: 20px; }
@@ -218,6 +218,7 @@
     "PAWR": { b: 384.295, d: 349.359, c: 0.95 },
     "PAWS": { b: 211.123, d: 191.93, c: 0.522 },
     "PAWT": { b: 225.077, d: 204.615, c: 0.557 },
+    "PAWU": { b: 147.186, d: 133.792, c: 0.364 },
     "MGWA": { b: 622.823, d: 566.202, c: 1.54 },
     "MGWB": { b: 902.615, d: 820.559, c: 2.232 },
     "MGWC": { b: 775.887, d: 705.352, c: 1.919 },
