@@ -219,7 +219,7 @@
     if (from && to) {
       let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
       let finalDist = dist * 2;
-      mainOutput.innerText = finalDist.toFixed(2) + " Mi";
+      mainOutput.innerText = finalDist.toFixed(2) + " $";
     } else {
       mainOutput.innerText = "0.00 Mile";
     }
