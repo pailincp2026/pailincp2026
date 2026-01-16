@@ -9,26 +9,20 @@
       --primary-blue: #002d5a;
       --accent-gold: #ffb81c;
       --success-green: #00ff88;
-      --glass-effect: rgba(255, 255, 255, 0.1); /* ความโปร่งใสของการ์ด */
-      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.3);
     }
 
     body {
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin: 0; padding: 0; display: flex; justify-content: center;
       min-height: 100vh;
-      background-color: #001a33;
-      /* ภาพพื้นหลังชัดเจน 100% ไม่มีการทับซ้อนสีเข้ม */
-      background-image: url('offshore.JPG'); 
-      background-repeat: no-repeat;
-      background-position: center; 
-      background-attachment: fixed;
-      background-size: cover; 
+      /* พื้นหลังหลักของหน้าจอ */
+      background: #001a33 url('offshore.JPG') no-repeat center center fixed;
+      background-size: cover;
     }
 
     .calculator-card {
       width: 100%; max-width: 480px;
-      background: transparent; 
       display: flex; flex-direction: column;
       padding: 20px;
     }
@@ -37,23 +31,21 @@
       height: 120px; display: flex; align-items: center; padding: 0 25px;
       color: white; justify-content: space-between; 
       border-bottom: 4px solid var(--accent-gold); 
-      /* ส่วนหัวโปร่งใสเล็กน้อยเพื่อให้เห็นภาพด้านหลัง */
-      background: rgba(0, 45, 90, 0.5); 
-      backdrop-filter: blur(5px);
+      background: rgba(0, 45, 90, 0.6); /* หัวข้อโปร่งแสงเล็กน้อย */
+      backdrop-filter: blur(10px);
       border-radius: 20px 20px 0 0;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
     
-    .logo { height: 65px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.6)); }
-    .hero-text h2 { margin: 0; font-size: 1.6rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
-    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.9; }
+    .logo { height: 75px; filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.5)); }
+    .hero-text h2 { margin: 0; font-size: 1.6rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.9; color: var(--accent-gold); }
 
     .content { 
       padding: 30px 25px; 
-      /* โปร่งใส 100% มองทะลุเห็นพื้นหลัง */
-      background: var(--glass-effect);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      /* แก้ไข: โปร่งใส 100% (Transparent) แต่ยังคงเอฟเฟกต์ Blur ให้ตัวหนังสืออ่านง่าย */
+      background: transparent; 
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--glass-border);
       border-top: none;
       border-radius: 0 0 20px 20px;
@@ -62,13 +54,13 @@
     label {
       display: block; font-size: 0.75rem; font-weight: bold; color: var(--accent-gold); 
       margin-bottom: 10px; text-transform: uppercase;
-      text-shadow: 1px 1px 4px rgba(0,0,0,1); /* เงาเข้มเพื่อให้ตัวหนังสือลอยเด่น */
+      text-shadow: 1px 1px 3px rgba(0,0,0,1); /* เงาเข้มเพื่อให้ข้อความลอยเด่นบนภาพ */
     }
 
     select, input {
       width: 100%; padding: 15px; border: 1px solid var(--glass-border); 
       border-radius: 12px; font-size: 1rem; box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.85); /* ให้พื้นหลัง Input ขาวจางๆ เพื่อให้อ่านง่าย */
+      background: rgba(255, 255, 255, 0.9); /* ให้ช่องกรอกข้อมูลขาวชัดเจนเพื่อการใช้งานที่ง่าย */
       color: var(--primary-blue); margin-bottom: 25px;
       font-weight: bold;
     }
@@ -76,7 +68,7 @@
     .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
     .result-section {
-      background: rgba(0, 0, 0, 0.3); /* พื้นหลังผลลัพธ์โปร่งแสงสีเข้มเพื่อให้ตัวเลขสีเขียวชัดเจน */
+      background: rgba(0, 0, 0, 0.5); /* พื้นหลังผลลัพธ์ดำจางๆ เพื่อขับตัวเลขสีเขียว */
       padding: 25px;
       border-radius: 20px; text-align: center; 
       border: 1px solid var(--glass-border);
@@ -89,14 +81,12 @@
       font-size: 3.2rem; 
       margin: 15px 0; 
       text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
-      min-height: 4.5rem;
-      display: flex; align-items: center; justify-content: center;
     }
     
     .save-cost-badge {
       display: block; width: 100%; background: #28a745; color: white;
       padding: 16px; border-radius: 12px; font-weight: bold; border: none;
-      font-size: 1.6rem; letter-spacing: 2px;
+      font-size: 1.4rem; cursor: pointer;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
 
@@ -115,7 +105,7 @@
 
 <div class="calculator-card">
   <div class="hero">
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="Pailin.rig.png" alt="Pailin Rig" class="logo">
     <div class="hero-text">
       <h2>Benefit Calculator</h2>
       <p>Operational Cost Estimation</p>
@@ -124,15 +114,12 @@
 
   <div class="content">
     <label>Media Type Selection</label>
-    <select id="type-select" onchange="applyPreset()">
+    <select id="type-select" onchange="calculate()">
       <option value="">-- Tap to Select Media --</option>
       <option value="gas_pacpp">Gas / PACPP</option>
       <option value="condy">CONDY PACPP</option>
       <option value="remote">Gas Remote Platform</option>
     </select>
-
-    <label for="val-hours">Additional Hours</label>
-    <input type="number" id="val-hours" placeholder="0" oninput="calculate()">
 
     <div class="row-grid">
       <div>
@@ -149,6 +136,9 @@
       </div>
     </div>
 
+    <label for="val-hours">Additional Hours</label>
+    <input type="number" id="val-hours" placeholder="0" oninput="calculate()">
+
     <div class="result-section">
       <div id="selected-label">COST ESTIMATE</div>
       <div class="total-display" id="main-output">$0.00</div>
@@ -162,9 +152,8 @@
 </div>
 
 <script>
-  // -- JavaScript คงเดิมตามที่คุณต้องการ --
-  const locations = ["PALQ", "PAWA", "PAWB", "PAWC", "PAWD", "PAWE", "PAWF", "PAWG", "PAWH", "PAWI", "PAWJ", "PAWK", "PAWL", "PAWM", "PAWN", "PAWO", "PAWP", "PAWQ", "PAWR", "PAWS", "PAWT", "PAWU", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
-  const distMatrix = { "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65}, "PAWA": {"PALQ":65.44,"PAWB":88.25}, "PAWB": {"PALQ":52.95,"PAWA":88.25} };
+  const locations = ["PALQ", "PAWA", "PAWB", "PAWD", "PAWS", "MGWA", "MGWB"]; 
+  const distMatrix = { "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65} };
   const presets = { gas_pacpp: { rate: 9.17, price: 6000 }, condy: { rate: 396, price: 60 }, remote: { rate: 0.21, price: 6000 } };
 
   const fromSel = document.getElementById('loc-from');
@@ -179,34 +168,25 @@
     toSel.add(new Option(loc, loc));
   });
 
-  function applyPreset() {
-    fromSel.selectedIndex = 0; toSel.selectedIndex = 0;
-    routeLabel.innerText = "COST ESTIMATE";
-    calculate();
-  }
-
   function updateDistance() {
-    typeSel.selectedIndex = 0; hoursInput.value = "";
-    const from = fromSel.value; const to = toSel.value;
+    const from = fromSel.value;
+    const to = toSel.value;
     if (from && to) {
       let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
       routeLabel.innerText = from + " ➔ " + to;
-      mainOutput.innerText = dist.toFixed(2) + " Miles";
-    } else {
-      routeLabel.innerText = "COST ESTIMATE";
-      mainOutput.innerText = "0.00 Miles";
+      if (!typeSel.value) mainOutput.innerText = dist.toFixed(2) + " Miles";
     }
   }
 
   function calculate() {
-    const mediaKey = typeSel.value; const hoursVal = hoursInput.value;
-    if (!mediaKey || !hoursVal || parseFloat(hoursVal) <= 0) {
-      if (!fromSel.value) mainOutput.innerText = '$0.00';
-      return;
+    const mediaKey = typeSel.value;
+    const hoursVal = parseFloat(hoursInput.value);
+    if (mediaKey && hoursVal > 0) {
+      const { rate, price } = presets[mediaKey];
+      const total = hoursVal * rate * price;
+      mainOutput.innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2});
+      routeLabel.innerText = "COST ESTIMATE";
     }
-    const { rate, price } = presets[mediaKey];
-    const total = parseFloat(hoursVal) * rate * price;
-    mainOutput.innerText = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   }
 </script>
 
