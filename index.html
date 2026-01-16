@@ -193,9 +193,9 @@
 
   <div class="route-result-box">
     <div class="route-header">ROUTE BENEFIT ANALYSIS</div>
-    <div class="route-item"><span>Benefit</span> <span id="res-benefit">-</span></div>
-    <div class="route-item"><span>Desal</span> <span id="res-desal">-</span></div>
-    <div class="route-item"><span>Lower Carbon</span> <span id="res-carbon">-</span></div>
+    <div class="route-item"><span>Benefit($)</span> <span id="res-Benefit($)">-</span></div>
+    <div class="route-item"><span>Disal(Liter)</span> <span id="res-Disal(Liter)">-</span></div>
+    <div class="route-item"><span>Lower Carbon(TonCO2e)</span> <span id="res-carbon">-</span></div>
   </div>
 
 </div>
@@ -215,6 +215,14 @@
     "PAWB": { b: 110.883, d: 100.803, c: 0.274 },
     "PAWC": { b: 308.32, d: 280.289, c: 0.76 },
     "PAWD": { b: 93.203, d: 84.73, c: 0.23 },
+    "PAWE": { b: 202.99, d: 184.536, c: 0.502 },
+    "PAWF": { b: 3.243, d: 2.948, c: 0.008 },
+    "PAWG": { b: 280.577, d: 255.07, c: 0.694 },
+    "PAWH": { b: 121.275, d: 110.25, c: 0.30 },
+    "PAWI": { b: 204.118, d: 185.562, c: 0.505 },
+    "PAWJ": { b: 356.055, d: 323.686, c: 0.88 },
+    "PAWK": { b: 442.845, d: 402.587, c: 1.095 },
+    "PAWL": { b: 233.587, d: 212.352, c: 0.578 },
     "PAWM": { b: 96.76, d: 87.964, c: 0.24 },
     "PAWN": { b: 400.29, d: 363.9, c: 0.99 },
     "PAWO": { b: 249.15, d: 226.496, c: 0.62 },
@@ -230,6 +238,7 @@
     "MGWF": { b: 555.077, d: 504.616, c: 1.373 },
     "MGWG": { b: 758.115, d: 689.195, c: 1.875 },
     "MGWH": { b: 920.212, d: 836.556, c: 2.275 },
+    "MGWI": { b: 616.818, d: 560.743, c: 1.525 },
     "MGWJ": { b: 914.385, d: 831.259, c: 2.261 }
   };
 
@@ -261,12 +270,12 @@
       const b = Math.abs(endData.b - startData.b).toLocaleString(undefined, {minimumFractionDigits: 3});
       const d = Math.abs(endData.d - startData.d).toLocaleString(undefined, {minimumFractionDigits: 3});
       const c = Math.abs(endData.c - startData.c).toLocaleString(undefined, {minimumFractionDigits: 3});
-      document.getElementById('res-benefit').innerText = b;
-      document.getElementById('res-desal').innerText = d;
+      document.getElementById('res-Benefit($)').innerText = b;
+      document.getElementById('res-Disal(Liter)').innerText = d;
       document.getElementById('res-carbon').innerText = c;
     } else {
-      document.getElementById('res-benefit').innerText = "-";
-      document.getElementById('res-desal').innerText = "-";
+      document.getElementById('res-Benefit($)').innerText = "-";
+      document.getElementById('res-Disal(Liter)').innerText = "-";
       document.getElementById('res-carbon').innerText = "-";
     }
   }
