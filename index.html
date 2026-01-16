@@ -23,6 +23,7 @@
       align-items: center;
     }
 
+    /* แถบบนยาวเต็มหน้าเว็บ */
     .hero-wrapper {
       width: 100%;
       background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('pailin_rig.jpg');
@@ -53,7 +54,7 @@
     .calculator-card {
       width: 95%;
       max-width: 500px;
-      margin: 30px 0;
+      margin: 25px 0;
       padding: 10px;
     }
 
@@ -76,20 +77,19 @@
 
     .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-    /* Checkbox Styles */
-    .checkbox-container {
-      display: flex; align-items: center; margin-bottom: 20px;
-      color: var(--white); font-weight: bold; cursor: pointer;
-      text-shadow: 2px 2px 6px #000;
-    }
-
-    .checkbox-container input {
-      width: auto; margin: 0 10px 0 0; cursor: pointer;
-      transform: scale(1.5);
+    /* แสดงข้อความ Round Trip แบบนิ่งๆ */
+    .info-text {
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      text-align: right;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px #000;
     }
 
     .result-section {
-      text-align: center; margin-top: 15px;
+      text-align: center; margin-top: 10px;
     }
 
     .total-display { 
@@ -114,7 +114,7 @@
     }
 
     @media (max-width: 600px) {
-      .total-display { font-size: 3rem; }
+      .total-display { font-size: 3.2rem; }
       .hero-content { height: 85px; }
       .logo { height: 45px; }
     }
@@ -161,13 +161,12 @@
       </div>
     </div>
 
-    <label class="checkbox-container">
-      <input type="checkbox" id="round-trip" onchange="updateDistance()"> 
-      x2 Round Trip
-    </label>
+    <div class="info-text">
+       Auto x2 Round Trip Applied
+    </div>
 
     <div class="result-section">
-      <div id="selected-label" style="color: var(--accent-gold); font-weight: 900; text-shadow: 2px 2px 4px #000; letter-spacing: 1.5px;">ESTIMATED TOTAL</div>
+      <div id="selected-label" style="color: var(--white); font-weight: 900; text-shadow: 2px 2px 4px #000; letter-spacing: 1.5px;">ESTIMATED TOTAL</div>
       <div class="total-display" id="main-output">$0.00</div>
       <button class="save-btn">SAVE COSTS</button>
     </div>
@@ -180,15 +179,21 @@
 
 <script>
   const locations = ["PALQ", "PAWA", "PAWB", "PAWD", "PAWS", "MGWA", "MGWB", "MGWC", "MGWD", "MGWE", "MGWF", "MGWG", "MGWH", "MGWI", "MGWJ", "MGWK", "MGWL"];
+  
+  // ตารางระยะทางตัวอย่าง (Miles)
   const distMatrix = { "PALQ": {"PAWA":65.44,"PAWB":52.95,"PAWD":48.06,"PAWS":102.65} };
-  const presets = { gas_pacpp: { rate: 9.17, price: 6000 }, condy: { rate: 396, price: 60 }, remote: { rate: 0.21, price: 6000 } };
+  
+  const presets = { 
+    gas_pacpp: { rate: 9.17, price: 6000 }, 
+    condy: { rate: 396, price: 60 }, 
+    remote: { rate: 0.21, price: 6000 } 
+  };
 
   const fromSel = document.getElementById('loc-from');
   const toSel = document.getElementById('loc-to');
   const typeSel = document.getElementById('type-select');
   const hoursInput = document.getElementById('val-hours');
   const mainOutput = document.getElementById('main-output');
-  const roundTripCb = document.getElementById('round-trip');
 
   locations.forEach(loc => {
     fromSel.add(new Option(loc, loc));
@@ -198,21 +203,23 @@
   function updateDistance() {
     const from = fromSel.value; 
     const to = toSel.value;
-    const isRoundTrip = roundTripCb.checked;
 
     if (from && to && !typeSel.value) {
       let dist = (from === to) ? 0 : (distMatrix[from]?.[to] || distMatrix[to]?.[from] || 0);
-      if (isRoundTrip) dist = dist * 2;
-      mainOutput.innerText = dist.toFixed(2) + " Miles";
+      
+      // คูณสองถาวร (Round Trip)
+      let finalDist = dist * 2;
+      
+      mainOutput.innerText = finalDist.toFixed(2) + " Miles (RT)";
     }
-    if (typeSel.value) calculate(); // ถ้าเลือก Media ไว้ให้คำนวณเงินต่อทันที
+    
+    if (typeSel.value) calculate();
   }
 
   function calculate() {
     const mediaKey = typeSel.value;
     const hoursVal = parseFloat(hoursInput.value) || 0;
     
-    // Logic การคำนวณ (สามารถปรับสูตรเพื่อรวมระยะทาง Miles ได้ที่นี่ถ้าต้องการ)
     if (mediaKey && hoursVal > 0) {
       const { rate, price } = presets[mediaKey];
       const total = hoursVal * rate * price;
